@@ -27,6 +27,6 @@ class Server {
   }
 }
 
-export function createServer(): Server {
-  return new Server(express());
+export function createServer(config?: Partial<ServerConfig>): Server {
+  return new Server(express(), config);
 }
