@@ -1,3 +1,5 @@
+import { StoredUser } from '../user/user.entity';
+
 export interface RegisterValues {
   name: string;
   username: string;
@@ -10,7 +12,14 @@ export interface LoginValues {
   password: string;
 }
 
+export interface RefreshTokenValues {
+  token: string;
+  user: StoredUser;
+}
+
+export type AuthToken = string;
+
 export interface AuthResult {
-  accessToken: string;
-  refreshToken: string;
+  accessToken: AuthToken;
+  refreshToken: AuthToken;
 }
