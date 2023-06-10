@@ -13,3 +13,6 @@ export type FilterParams = {
 export interface FindOptions {
   filter?: FilterParams;
 }
+export interface Deleteptions {
+  filter?: FilterParams;
+}

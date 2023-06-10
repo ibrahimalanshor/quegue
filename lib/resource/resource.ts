@@ -1,6 +1,6 @@
 import { knex } from '../knex/knex';
 import { Stored } from '../entity/types';
-import { FindOptions, Resource } from './resource.type';
+import { Deleteptions, FindOptions, Resource } from './resource.type';
 import { createWhereBuilder } from './resource.helper';
 
 export abstract class ResourceModel {
@@ -34,6 +34,12 @@ export class ResourceService<T, C> {
         },
       },
     });
+  }
+
+  async delete(options: Deleteptions) {
+    await knex(this.model.table)
+      .where(createWhereBuilder(options.filter))
+      .delete();
   }
 }
 
