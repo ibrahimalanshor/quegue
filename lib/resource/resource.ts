@@ -1,6 +1,11 @@
 import { knex } from '../knex/knex';
 import { Stored } from '../entity/types';
-import { Deleteptions, FindOptions, Resource } from './resource.type';
+import {
+  Deleteptions,
+  FindOptions,
+  Resource,
+  StoreOptions,
+} from './resource.type';
 import { createWhereBuilder } from './resource.helper';
 
 export abstract class ResourceModel {
@@ -13,14 +18,16 @@ export class ResourceService<T, C> {
   constructor(public model: ResourceModel) {}
 
   async findOne(options: FindOptions): Promise<Stored<T>> {
+    const columns = options.columns ? options.columns : this.model.selectable;
+
     const res = await knex(this.model.table)
       .where(createWhereBuilder(options.filter))
-      .first(this.model.selectable);
+      .first(columns);
 
     return res as Stored<T>;
   }
 
-  async store(values: C): Promise<Stored<T>> {
+  async store(values: C, options?: StoreOptions): Promise<Stored<T>> {
     const fillableValues = Object.fromEntries(
       this.model.fillable.map((col: string) => [col, values[col as keyof C]])
     );
@@ -33,6 +40,7 @@ export class ResourceService<T, C> {
           value: storedId,
         },
       },
+      columns: options?.returnedColumns,
     });
   }
 

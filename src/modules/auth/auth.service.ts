@@ -53,10 +53,12 @@ export class AuthService {
   // catch unique error
   async register(values: RegisterValues): Promise<AuthResult> {
     try {
-      const user = await userResource.service.store(values);
+      const user = await userResource.service.store(values, {
+        returnedColumns: ['id', 'email', 'username'],
+      });
 
       return await this.authGeneratorService.generateAuthResult(user);
-    } catch (err: any) {
+    } catch (err) {
       throw new RegisterException(err);
     }
   }

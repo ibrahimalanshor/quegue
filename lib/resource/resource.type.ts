@@ -12,7 +12,11 @@ export type FilterParams = {
 };
 export interface FindOptions {
   filter?: FilterParams;
+  columns?: string[];
 }
 export interface Deleteptions {
   filter?: FilterParams;
+}
+export interface StoreOptions {
+  returnedColumns?: string[];
 }
