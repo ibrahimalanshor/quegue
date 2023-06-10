@@ -1,0 +1,6 @@
+{
+    "auth": {
+        "email-already-exists": "Email already exists",
+        "unauthorized": "Unauthorized"
+    }
+}

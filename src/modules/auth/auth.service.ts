@@ -11,6 +11,7 @@ import {
 import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
+import { RegisterException } from '../../exceptions/auth/register.exception';
 
 @Service()
 export class AuthGeneratorService {
@@ -51,9 +52,13 @@ export class AuthService {
   // dispatch registered event to send email
   // catch unique error
   async register(values: RegisterValues): Promise<AuthResult> {
-    const user = await userResource.service.store(values);
+    try {
+      const user = await userResource.service.store(values);
 
-    return await this.authGeneratorService.generateAuthResult(user);
+      return await this.authGeneratorService.generateAuthResult(user);
+    } catch (err: any) {
+      throw new RegisterException(err);
+    }
   }
 
   // catch not found error
