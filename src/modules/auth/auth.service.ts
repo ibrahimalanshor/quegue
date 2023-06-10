@@ -12,7 +12,7 @@ import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
 import { RegisterException } from '../../exceptions/auth/register.exception';
-import { registeredEvent } from '../../events/auth/registered.event';
+import { RegistrationEvent } from '../../events/auth/registration.event';
 
 @Service()
 export class AuthGeneratorService {
@@ -50,15 +50,13 @@ export class AuthGeneratorService {
 export class AuthService {
   constructor(public authGeneratorService: AuthGeneratorService) {}
 
-  // dispatch registered event to send email
-  // catch unique error
   async register(values: RegisterValues): Promise<AuthResult> {
     try {
       const user = await userResource.service.store(values, {
         returnedColumns: ['id', 'email', 'username'],
       });
 
-      registeredEvent.emit('registered', user);
+      await RegistrationEvent.emit('registered', user);
 
       return await this.authGeneratorService.generateAuthResult(user);
     } catch (err) {
