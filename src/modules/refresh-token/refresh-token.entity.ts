@@ -3,7 +3,7 @@ import { User } from '../user/user.entity';
 
 export interface RefreshToken {
   token: String;
-  user: User;
+  user: Stored<User>;
 }
 
 export type StoredRefreshToken = Stored<RefreshToken>;
