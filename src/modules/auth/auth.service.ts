@@ -5,17 +5,12 @@ import {
   LoginValues,
   RefreshTokenValues,
   RegisterValues,
-  VerifyUserValues,
 } from './auth.entity';
 import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
 import { RegistrationEvent } from '../../events/auth/registration.event';
-import { verificationTokenResource } from '../verification-token/verification-token.resource';
-import { getNext, isBefore } from '../../../lib/date/date.helper';
-import { getString } from '../../../lib/helpers/resoure.helper';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
-import { VerifyException } from '../../exceptions/auth/verify.exception';
 
 @Service()
 export class AuthService {
@@ -80,51 +75,5 @@ export class AuthService {
     });
 
     return await generateAccessToken(storedRefreshToken.user);
-  }
-
-  async verifyUser(verifyUserValues: VerifyUserValues): Promise<void> {
-    try {
-      const storedVerificationToken =
-        await verificationTokenResource.service.findOne({
-          filter: {
-            token: {
-              operator: '=',
-              value: verifyUserValues.token,
-            },
-          },
-          columns: ['id', 'expire_at', 'user_id'],
-          throwOnNoResult: true,
-        });
-
-      if (isBefore(storedVerificationToken.expire_at)) {
-        throw new Error(getString('auth.token-expired') as string);
-      }
-
-      const res = await Promise.all([
-        userResource.service.update({
-          values: {
-            verified_at: new Date(),
-          },
-          filter: {
-            id: {
-              operator: '=',
-              value: storedVerificationToken.user_id,
-            },
-          },
-          force: true,
-          returnCreated: false,
-        }),
-        verificationTokenResource.service.delete({
-          filter: {
-            id: {
-              operator: '=',
-              value: storedVerificationToken.id,
-            },
-          },
-        }),
-      ]);
-    } catch (err) {
-      throw new VerifyException(err);
-    }
   }
 }

@@ -1,4 +1,4 @@
-import Container, { Service } from 'typedi';
+import { Service } from 'typedi';
 import autobind from 'autobind-decorator';
 import { RouterContext } from '../../../lib/server/response';
 import { AuthResult, AuthToken } from './auth.entity';
@@ -6,11 +6,16 @@ import { AuthService } from './auth.service';
 import { RegisterException } from '../../exceptions/auth/register.exception';
 import { VerifyException } from '../../exceptions/auth/verify.exception';
 import appConfig from '../../config/app.config';
+import { VerificationService } from '../verification/verification.service';
+import { ResendVerificationException } from '../../exceptions/auth/resend-verification.exception';
 
 @Service()
 @autobind
 export class AuthController {
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    public verificationService: VerificationService
+  ) {}
 
   async register(context: RouterContext): Promise<AuthResult> {
     try {
@@ -35,15 +40,25 @@ export class AuthController {
     return await this.authService.refreshToken(context.req.body);
   }
 
-  async verifyUser(context: RouterContext): Promise<void> {
+  async verify(context: RouterContext): Promise<void> {
     try {
-      await this.authService.verifyUser({
+      await this.verificationService.verify({
         token: context.req.params.token,
       });
 
       return context.res.redirect(appConfig.url);
     } catch (err) {
       throw new VerifyException(err);
+    }
+  }
+
+  async resendVerification(context: RouterContext): Promise<void> {
+    try {
+      await this.verificationService.resendVerification({
+        email: context.req.body.email,
+      });
+    } catch (err) {
+      throw new ResendVerificationException(err);
     }
   }
 }

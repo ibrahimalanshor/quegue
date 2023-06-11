@@ -1,7 +1,8 @@
 {
     "auth": {
         "email-already-exists": "Email already exists",
-        "unauthorized": "Unauthorized",
+        "email-already-verified": "Email is already verified",
+        "email-not-found": "Email is not found",
         "mail": {
             "verification-subject": "Verify Your Account",
             "verification-content": "Thank you for creating an account with us. To ensure the security of your account, we kindly request you to verify your email address.",

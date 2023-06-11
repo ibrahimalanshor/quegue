@@ -1,11 +1,5 @@
 import { Expose } from 'class-transformer';
-import {
-  IsDefined,
-  IsEmail,
-  IsJWT,
-  IsNotEmpty,
-  IsString,
-} from 'class-validator';
+import { IsDefined, IsJWT, IsNotEmpty } from 'class-validator';
 
 export class RefreshTokenDto {
   @Expose()

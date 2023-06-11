@@ -18,10 +18,6 @@ export interface LogoutValues {
   token: string;
 }
 
-export interface VerifyUserValues {
-  token: string;
-}
-
 export type AuthToken = string;
 
 export interface AuthResult {

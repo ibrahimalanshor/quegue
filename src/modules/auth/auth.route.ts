@@ -10,6 +10,7 @@ import { LoginDto } from './dto/login.dto';
 import { LogoutDto } from './dto/logout.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ResendVerificationDto } from './dto/resend-verification.dto';
 
 export const authRoute = createRoute(Container.get(AuthController))
   .post('/api/auth/login', (controller: AuthController) => [
@@ -29,6 +30,10 @@ export const authRoute = createRoute(Container.get(AuthController))
     createJsonResponse(controller.refreshToken),
   ])
   .get('/api/auth/verify/:token', (controller: AuthController) =>
-    createResponse(controller.verifyUser)
+    createResponse(controller.verify)
   )
+  .post('/api/auth/resend-verification', (controller: AuthController) => [
+    createBodyValidator(ResendVerificationDto),
+    createJsonResponse(controller.resendVerification),
+  ])
   .getRouter();
