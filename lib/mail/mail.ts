@@ -4,7 +4,7 @@ import { mailConfig } from '../../src/config/mail.config';
 import { renderFile } from 'pug';
 import appConfig from '../../src/config/app.config';
 
-interface MailOptions {
+export class Mail {
   to: string;
   subject: string;
   text: string;
@@ -12,7 +12,7 @@ interface MailOptions {
   templateData: Record<string, any>;
 }
 
-export async function sendMail(options: MailOptions) {
+export async function sendMail(mail: Mail) {
   const transporter = nodemailer.createTransport({
     host: mailConfig.host,
     port: mailConfig.port,
@@ -24,13 +24,13 @@ export async function sendMail(options: MailOptions) {
 
   await transporter.sendMail({
     from: mailConfig.from,
-    to: options.to,
-    subject: options.subject,
-    text: options.text,
+    to: mail.to,
+    subject: mail.subject,
+    text: mail.text,
     html: renderFile(
-      path.resolve(__dirname, `../../src/mail/${options.template}`),
+      path.resolve(__dirname, `../../src/templates/mail/${mail.template}`),
       {
-        ...options.templateData,
+        ...mail.templateData,
         from: {
           url: appConfig.url,
           name: appConfig.name,
