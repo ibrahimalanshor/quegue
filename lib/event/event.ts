@@ -17,7 +17,7 @@ export class EventEmitter {
 
   async emit(eventName: string, ...args: any[]) {
     for (const listener of this.events[eventName]) {
-      await listener(args);
+      await listener(...args);
     }
   }
 }
