@@ -5,8 +5,11 @@ import {
   FindOptions,
   Resource,
   StoreOptions,
+  UpdateOptions,
 } from './resource.type';
 import { createWhereBuilder } from './resource.helper';
+import { NoResultError } from '../db/errors/no-result.error';
+import { ConflictError } from '../db/errors/conflict.error';
 
 export abstract class ResourceModel {
   abstract table: string;
@@ -14,7 +17,7 @@ export abstract class ResourceModel {
   abstract selectable: string[];
 }
 
-export class ResourceService<T, C> {
+export class ResourceService<T> {
   constructor(public model: ResourceModel) {}
 
   async findOne(options: FindOptions): Promise<Stored<T>> {
@@ -24,23 +27,61 @@ export class ResourceService<T, C> {
       .where(createWhereBuilder(options.filter))
       .first(columns);
 
+    if ((options?.throwOnNoResult ?? false) && res === undefined) {
+      throw new NoResultError();
+    }
+
     return res as Stored<T>;
   }
 
-  async store(values: C, options?: StoreOptions): Promise<Stored<T>> {
-    const fillableValues = Object.fromEntries(
-      this.model.fillable.map((col: string) => [col, values[col as keyof C]])
-    );
+  async store(options: StoreOptions): Promise<Stored<T> | number> {
+    try {
+      const fillableValues = options.force
+        ? options.values
+        : Object.fromEntries(
+            this.model.fillable.map((col: string) => [col, options.values[col]])
+          );
 
-    const [storedId] = await knex(this.model.table).insert(fillableValues);
+      const [storedId] = await knex(this.model.table).insert(fillableValues);
 
-    return this.findOne({
-      filter: {
-        id: {
-          value: storedId,
+      if (!(options.returnCreated ?? true)) {
+        return storedId;
+      }
+
+      return await this.findOne({
+        filter: {
+          id: {
+            value: storedId,
+          },
         },
-      },
-      columns: options?.returnedColumns,
+        columns: options.returnedColumns,
+      });
+    } catch (err: any) {
+      if (err.errno === 1062) {
+        throw new ConflictError();
+      }
+
+      throw err;
+    }
+  }
+
+  async update(options: UpdateOptions): Promise<Stored<T> | number> {
+    const fillableValues = options.force
+      ? options.values
+      : Object.fromEntries(
+          this.model.fillable.map((col: string) => [col, options.values[col]])
+        );
+
+    const res = await knex(this.model.table)
+      .where(createWhereBuilder(options.filter))
+      .update(fillableValues);
+
+    if (!(options.returnCreated ?? true)) {
+      return res;
+    }
+
+    return await this.findOne({
+      filter: options.filter,
     });
   }
 
@@ -51,16 +92,12 @@ export class ResourceService<T, C> {
   }
 }
 
-export function createResourceService<T, C>(
-  model: ResourceModel
-): ResourceService<T, C> {
-  return new ResourceService<T, C>(model);
+export function createResourceService<T>(model: ResourceModel) {
+  return new ResourceService<T>(model);
 }
 
-export function createResource<T, C = Partial<T>>(
-  model: ResourceModel
-): Resource<T, C> {
+export function createResource<T>(model: ResourceModel): Resource<T> {
   return {
-    service: createResourceService<T, C>(model),
+    service: createResourceService<T>(model),
   };
 }
