@@ -2,7 +2,9 @@ import { Stored } from '../../../lib/entity/types';
 import { User } from '../user/user.entity';
 
 export interface VerificationToken {
-  token: String;
+  token: string;
+  expire_at: Date;
+  user_id: number;
   user: Stored<User>;
 }
 

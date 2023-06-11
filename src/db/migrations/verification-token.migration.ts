@@ -11,8 +11,9 @@ export class VerificationTokenMigration extends DbMigration {
       'verification_tokens',
       (tableBuilder: Knex.CreateTableBuilder) => {
         tableBuilder.bigIncrements('id');
-        tableBuilder.string('token');
-        tableBuilder.bigInteger('user_id').unsigned();
+        tableBuilder.string('token').notNullable();
+        tableBuilder.timestamp('expire_at').notNullable();
+        tableBuilder.bigInteger('user_id').unsigned().notNullable();
         tableBuilder.timestamps(true, true);
         tableBuilder
           .foreign('user_id')

@@ -2,7 +2,9 @@ import { Stored } from '../../../lib/entity/types';
 import { User } from '../user/user.entity';
 
 export interface RefreshToken {
-  token: String;
+  token: string;
+  user_id: number;
+  expire_at: Date;
   user: Stored<User>;
 }
 

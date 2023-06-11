@@ -11,10 +11,10 @@ export class UserMigration extends DbMigration {
       'users',
       (tableBuilder: Knex.CreateTableBuilder) => {
         tableBuilder.bigIncrements('id');
-        tableBuilder.string('email').unique();
-        tableBuilder.string('username');
-        tableBuilder.string('name');
-        tableBuilder.string('password');
+        tableBuilder.string('email').unique().notNullable();
+        tableBuilder.string('username').notNullable();
+        tableBuilder.string('name').notNullable();
+        tableBuilder.string('password').notNullable();
         tableBuilder.timestamp('verified_at').nullable();
         tableBuilder.timestamp('deleted_at').nullable();
         tableBuilder.timestamps(true, true);

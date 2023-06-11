@@ -8,6 +8,8 @@
             "verification-title": "Email Account Verification",
             "verification-greet": "Hello",
             "verification-link": "Verify"
-        }
+        },
+        "token-expired": "Token is expired",
+        "token-invalid": "Token is invalid"
     }
 }
