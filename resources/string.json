@@ -1,6 +1,13 @@
 {
     "auth": {
         "email-already-exists": "Email already exists",
-        "unauthorized": "Unauthorized"
+        "unauthorized": "Unauthorized",
+        "mail": {
+            "verification-subject": "Verify Your Account",
+            "verification-content": "Thank you for creating an account with us. To ensure the security of your account, we kindly request you to verify your email address.",
+            "verification-title": "Email Account Verification",
+            "verification-greet": "Hello",
+            "verification-link": "Verify"
+        }
     }
 }
