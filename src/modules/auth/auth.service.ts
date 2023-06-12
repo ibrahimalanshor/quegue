@@ -11,12 +11,17 @@ import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
 import { RegistrationEvent } from '../../events/auth/registration.event';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
+import { compare, hash } from '../../../lib/bcrypt/bcrypt';
+import { getString } from '../../../lib/helpers/resoure.helper';
 
 @Service()
 export class AuthService {
   async register(values: RegisterValues): Promise<AuthResult> {
     const user = (await userResource.service.store({
-      values,
+      values: {
+        ...values,
+        password: await hash(values.password),
+      },
       returnedColumns: ['id', 'email', 'username'],
     })) as StoredUser;
 
@@ -25,7 +30,6 @@ export class AuthService {
     return await generateAuthResult(user);
   }
 
-  // catch not found error
   async login(values: LoginValues): Promise<AuthResult> {
     const user = await userResource.service.findOne({
       filter: {
@@ -34,7 +38,12 @@ export class AuthService {
           value: values.email,
         },
       },
+      throwOnNoResult: true,
     });
+
+    if (!(await compare(values.password, user.password))) {
+      throw new Error(getString('auth.credential-invalid') as string);
+    }
 
     await refreshTokenResource.service.delete({
       filter: {

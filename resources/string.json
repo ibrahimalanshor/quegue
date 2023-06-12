@@ -11,6 +11,8 @@
             "verification-link": "Verify"
         },
         "token-expired": "Token is expired",
-        "token-invalid": "Token is invalid"
+        "token-invalid": "Token is invalid",
+        "credential-not-found": "Credential not found",
+        "credential-invalid": "Credential invalid"
     }
 }
