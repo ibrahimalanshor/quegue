@@ -20,6 +20,10 @@ export interface LogoutValues {
 
 export type AuthToken = string;
 
+export interface AuthPayload {
+  user_id: number;
+}
+
 export interface AuthResult {
   accessToken: AuthToken;
   refreshToken: AuthToken;

@@ -10,6 +10,7 @@ import { VerificationService } from '../verification/verification.service';
 import { ResendVerificationException } from '../../exceptions/auth/resend-verification.exception';
 import { LoginException } from '../../exceptions/auth/login.exception';
 import { LogoutException } from '../../exceptions/auth/logout.exception';
+import { RefreshTokenException } from '../../exceptions/auth/refresh-token.exception';
 
 @Service()
 @autobind
@@ -43,9 +44,12 @@ export class AuthController {
     }
   }
 
-  // catch 401 error
   async refreshToken(context: RouterContext): Promise<AuthToken> {
-    return await this.authService.refreshToken(context.req.body);
+    try {
+      return await this.authService.refreshToken(context.req.body);
+    } catch (err) {
+      throw new RefreshTokenException(err);
+    }
   }
 
   async verify(context: RouterContext): Promise<void> {

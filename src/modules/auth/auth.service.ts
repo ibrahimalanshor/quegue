@@ -13,6 +13,7 @@ import { RegistrationEvent } from '../../events/auth/registration.event';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
 import { compare, hash } from '../../../lib/bcrypt/bcrypt';
 import { getString } from '../../../lib/helpers/resoure.helper';
+import { isBefore } from '../../../lib/date/date.helper';
 
 @Service()
 export class AuthService {
@@ -27,7 +28,9 @@ export class AuthService {
 
     await RegistrationEvent.emit('registered', user);
 
-    return await generateAuthResult(user);
+    return await generateAuthResult({
+      user_id: user.id,
+    });
   }
 
   async login(values: LoginValues): Promise<AuthResult> {
@@ -38,6 +41,7 @@ export class AuthService {
           value: values.email,
         },
       },
+      columns: ['id', 'password'],
       throwOnNoResult: true,
     });
 
@@ -54,7 +58,9 @@ export class AuthService {
       },
     });
 
-    return await generateAuthResult(user);
+    return await generateAuthResult({
+      user_id: user.id,
+    });
   }
 
   async logout(refreshTokenValues: RefreshTokenValues) {
@@ -69,8 +75,6 @@ export class AuthService {
     });
   }
 
-  // catch not found error
-  // join user
   async refreshToken(
     refreshTokenValues: RefreshTokenValues
   ): Promise<AuthToken> {
@@ -81,8 +85,16 @@ export class AuthService {
           value: refreshTokenValues.token,
         },
       },
+      columns: ['user_id', 'expire_at'],
+      throwOnNoResult: true,
     });
 
-    return await generateAccessToken(storedRefreshToken.user);
+    if (isBefore(storedRefreshToken.expire_at)) {
+      throw new Error(getString('auth.token-expired') as string);
+    }
+
+    return await generateAccessToken({
+      user_id: storedRefreshToken.user_id,
+    });
   }
 }

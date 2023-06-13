@@ -25,7 +25,7 @@ export const authRoute = createRoute(Container.get(AuthController))
     createBodyValidator(RegisterDto),
     createJsonResponse(controller.register),
   ])
-  .post('/api/auth/refreshToken', (controller: AuthController) => [
+  .post('/api/auth/refresh-token', (controller: AuthController) => [
     createBodyValidator(RefreshTokenDto),
     createJsonResponse(controller.refreshToken),
   ])
