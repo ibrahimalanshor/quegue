@@ -8,7 +8,7 @@ const RegistrationEvent = new EventEmitter();
 RegistrationEvent.on('registered', async (user: StoredUser) => {
   const verificationService = Container.get(VerificationService);
 
-  verificationService.sendVerification(user);
+  await verificationService.sendVerification(user);
 });
 
 export { RegistrationEvent };
