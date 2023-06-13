@@ -10,6 +10,7 @@ import {
 import { createWhereBuilder } from './resource.helper';
 import { NoResultError } from '../db/errors/no-result.error';
 import { ConflictError } from '../db/errors/conflict.error';
+import { NoAffectedError } from '../db/errors/no-affected.error';
 
 export abstract class ResourceModel {
   abstract table: string;
@@ -86,9 +87,13 @@ export class ResourceService<T> {
   }
 
   async delete(options: Deleteptions) {
-    await knex(this.model.table)
+    const affected = await knex(this.model.table)
       .where(createWhereBuilder(options.filter))
-      .delete();
+      .del();
+
+    if ((options.throwOnNoAffected ?? false) && affected < 1) {
+      throw new NoAffectedError();
+    }
   }
 }
 
