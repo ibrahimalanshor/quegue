@@ -57,7 +57,6 @@ export class AuthService {
     return await generateAuthResult(user);
   }
 
-  // catch not found error
   async logout(refreshTokenValues: RefreshTokenValues) {
     await refreshTokenResource.service.delete({
       filter: {
@@ -66,6 +65,7 @@ export class AuthService {
           value: refreshTokenValues.token,
         },
       },
+      throwOnNoAffected: true,
     });
   }
 

@@ -9,6 +9,7 @@ import appConfig from '../../config/app.config';
 import { VerificationService } from '../verification/verification.service';
 import { ResendVerificationException } from '../../exceptions/auth/resend-verification.exception';
 import { LoginException } from '../../exceptions/auth/login.exception';
+import { LogoutException } from '../../exceptions/auth/logout.exception';
 
 @Service()
 @autobind
@@ -26,7 +27,6 @@ export class AuthController {
     }
   }
 
-  // catch 401 error
   async login(context: RouterContext): Promise<AuthResult> {
     try {
       return await this.authService.login(context.req.body);
@@ -35,9 +35,12 @@ export class AuthController {
     }
   }
 
-  // catch 401 error
   async logout(context: RouterContext): Promise<void> {
-    await this.authService.logout(context.req.body);
+    try {
+      await this.authService.logout(context.req.body);
+    } catch (err) {
+      throw new LogoutException(err);
+    }
   }
 
   // catch 401 error

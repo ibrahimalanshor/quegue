@@ -17,6 +17,7 @@ export interface FindOptions {
 }
 export interface Deleteptions {
   filter?: FilterParams;
+  throwOnNoAffected?: boolean;
 }
 export interface StoreOptions {
   values: Record<string, any>;
