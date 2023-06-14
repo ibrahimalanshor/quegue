@@ -14,5 +14,19 @@
         "token-invalid": "Token is invalid",
         "credential-not-found": "Credential not found",
         "credential-invalid": "Credential invalid"
+    },
+    "reset-password": {
+        "exceptions": {
+            "email-not-found": "Email is not found"
+        },
+        "mail": {
+            "forgot-password": {
+                "subject": "Password Reset - Action Required",
+                "content": "We have received a notification that you have forgotten your account password. Don't worry, we're here to help you regain access to your account.                ",
+                "title": "Reset Your Password Now!",
+                "greet": "Hello",
+                "link": "Reset Password"
+            }
+        }
     }
 }
