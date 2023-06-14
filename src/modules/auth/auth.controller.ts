@@ -4,10 +4,7 @@ import { RouterContext } from '../../../lib/server/response';
 import { AuthResult, AuthToken } from './auth.entity';
 import { AuthService } from './auth.service';
 import { RegisterException } from '../../exceptions/auth/register.exception';
-import { VerifyException } from '../../exceptions/auth/verify.exception';
-import appConfig from '../../config/app.config';
 import { VerificationService } from '../verification/verification.service';
-import { ResendVerificationException } from '../../exceptions/auth/resend-verification.exception';
 import { LoginException } from '../../exceptions/auth/login.exception';
 import { LogoutException } from '../../exceptions/auth/logout.exception';
 import { RefreshTokenException } from '../../exceptions/auth/refresh-token.exception';
@@ -49,28 +46,6 @@ export class AuthController {
       return await this.authService.refreshToken(context.req.body);
     } catch (err) {
       throw new RefreshTokenException(err);
-    }
-  }
-
-  async verify(context: RouterContext): Promise<void> {
-    try {
-      await this.verificationService.verify({
-        token: context.req.params.token,
-      });
-
-      return context.res.redirect(appConfig.url);
-    } catch (err) {
-      throw new VerifyException(err);
-    }
-  }
-
-  async resendVerification(context: RouterContext): Promise<void> {
-    try {
-      await this.verificationService.resendVerification({
-        email: context.req.body.email,
-      });
-    } catch (err) {
-      throw new ResendVerificationException(err);
     }
   }
 }
