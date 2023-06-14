@@ -9,11 +9,11 @@ import {
 import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
-import { RegistrationEvent } from '../../events/auth/registration.event';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
 import { compare, hash } from '../../../lib/bcrypt/bcrypt';
 import { getString } from '../../../lib/helpers/resoure.helper';
 import { isBefore } from '../../../lib/date/date.helper';
+import { RegistrationEvent } from './events/registration.event';
 
 @Service()
 export class AuthService {

@@ -1,7 +1,7 @@
-import { getString } from '../../../lib/helpers/resoure.helper';
-import { Mail } from '../../../lib/mail/mail';
-import { serverConfig } from '../../config/server.config';
-import { StoredUser } from '../../modules/user/user.entity';
+import { Mail } from '../../../../lib/mail/mail';
+import { getString } from '../../../../lib/helpers/resoure.helper';
+import { serverConfig } from '../../../config/server.config';
+import { StoredUser } from '../../user/user.entity';
 
 export class VerificationMail extends Mail {
   constructor(data: { user: StoredUser; token: string }) {

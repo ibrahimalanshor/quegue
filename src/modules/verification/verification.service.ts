@@ -6,18 +6,18 @@ import { userResource } from '../user/user.resource';
 import {
   ResendVerifyUserValues,
   VerifyUserValues,
-} from './verification-token.entity';
-import { verificationTokenResource } from './verification-token.resource';
+} from './verification.entity';
+import { verificationResource } from './verification.resource';
 import { sendMail } from '../../../lib/mail/mail';
 import { StoredUser } from '../user/user.entity';
-import { VerificationMail } from '../../mail/auth/verification.mail';
+import { VerificationMail } from './mail/verification.mail';
 
 @Service()
 export class VerificationService {
   async sendVerification(user: StoredUser): Promise<void> {
     const token = crypto.randomBytes(24).toString('hex');
 
-    await verificationTokenResource.service.store({
+    await verificationResource.service.store({
       values: {
         token,
         user_id: user.id,
@@ -30,7 +30,6 @@ export class VerificationService {
   }
 
   async resendVerification(values: ResendVerifyUserValues): Promise<void> {
-    console.log(values);
     const user = await userResource.service.findOne({
       filter: {
         email: {
@@ -49,19 +48,18 @@ export class VerificationService {
     await this.sendVerification(user);
   }
   async verify(verifyValues: VerifyUserValues): Promise<void> {
-    const storedVerificationToken =
-      await verificationTokenResource.service.findOne({
-        filter: {
-          token: {
-            operator: '=',
-            value: verifyValues.token,
-          },
+    const storedVerification = await verificationResource.service.findOne({
+      filter: {
+        token: {
+          operator: '=',
+          value: verifyValues.token,
         },
-        columns: ['id', 'expire_at', 'user_id'],
-        throwOnNoResult: true,
-      });
+      },
+      columns: ['id', 'expire_at', 'user_id'],
+      throwOnNoResult: true,
+    });
 
-    if (isBefore(storedVerificationToken.expire_at)) {
+    if (isBefore(storedVerification.expire_at)) {
       throw new Error(getString('auth.token-expired') as string);
     }
 
@@ -73,17 +71,17 @@ export class VerificationService {
         filter: {
           id: {
             operator: '=',
-            value: storedVerificationToken.user_id,
+            value: storedVerification.user_id,
           },
         },
         force: true,
         returnCreated: false,
       }),
-      verificationTokenResource.service.delete({
+      verificationResource.service.delete({
         filter: {
           id: {
             operator: '=',
-            value: storedVerificationToken.id,
+            value: storedVerification.id,
           },
         },
       }),

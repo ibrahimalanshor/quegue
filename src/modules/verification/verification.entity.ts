@@ -1,7 +1,7 @@
 import { Stored } from '../../../lib/entity/types';
 import { User } from '../user/user.entity';
 
-export interface VerificationToken {
+export interface Verification {
   token: string;
   expire_at: Date;
   user_id: number;
@@ -16,4 +16,4 @@ export interface ResendVerifyUserValues {
   email: string;
 }
 
-export type StoredVerificationToken = Stored<VerificationToken>;
+export type StoredVerification = Stored<Verification>;

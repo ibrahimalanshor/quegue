@@ -1,7 +1,7 @@
-import { EventEmitter } from '../../../lib/event/event';
-import { StoredUser } from '../../modules/user/user.entity';
 import Container from 'typedi';
-import { VerificationService } from '../../modules/verification/verification.service';
+import { EventEmitter } from '../../../../lib/event/event';
+import { VerificationService } from '../../verification/verification.service';
+import { StoredUser } from '../../user/user.entity';
 
 const RegistrationEvent = new EventEmitter();
 

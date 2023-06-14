@@ -1,14 +1,14 @@
 import { Knex } from 'knex';
 import { DbMigration } from '../../../lib/db/migration';
 
-export class VerificationTokenMigration extends DbMigration {
+export class VerificationMigration extends DbMigration {
   async drop(): Promise<void> {
-    await this.schema.dropTableIfExists('verification_tokens');
+    await this.schema.dropTableIfExists('verifications');
   }
 
   async create(): Promise<void> {
     await this.schema.createTable(
-      'verification_tokens',
+      'verifications',
       (tableBuilder: Knex.CreateTableBuilder) => {
         tableBuilder.bigIncrements('id');
         tableBuilder.string('token').notNullable();

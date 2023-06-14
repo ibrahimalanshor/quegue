@@ -1,6 +1,6 @@
-import { getString } from '../../../lib/helpers/resoure.helper';
-import { ConflictError } from '../../../lib/db/errors/conflict.error';
-import { BadRequestError } from '../../../lib/server/http-error/bad-request.error';
+import { ConflictError } from '../../../../lib/db/errors/conflict.error';
+import { getString } from '../../../../lib/helpers/resoure.helper';
+import { BadRequestError } from '../../../../lib/server/http-error/bad-request.error';
 
 export class RegisterException extends BadRequestError {
   constructor(error: any) {

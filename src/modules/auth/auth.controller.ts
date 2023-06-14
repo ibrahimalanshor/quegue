@@ -3,11 +3,11 @@ import autobind from 'autobind-decorator';
 import { RouterContext } from '../../../lib/server/response';
 import { AuthResult, AuthToken } from './auth.entity';
 import { AuthService } from './auth.service';
-import { RegisterException } from '../../exceptions/auth/register.exception';
 import { VerificationService } from '../verification/verification.service';
-import { LoginException } from '../../exceptions/auth/login.exception';
-import { LogoutException } from '../../exceptions/auth/logout.exception';
-import { RefreshTokenException } from '../../exceptions/auth/refresh-token.exception';
+import { LoginException } from './exceptions/login.exception';
+import { LogoutException } from './exceptions/logout.exception';
+import { RefreshTokenException } from './exceptions/refresh-token.exception';
+import { RegisterException } from './exceptions/register.exception';
 
 @Service()
 @autobind

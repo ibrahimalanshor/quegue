@@ -1,10 +1,10 @@
 import { Service } from 'typedi';
 import autobind from 'autobind-decorator';
 import { RouterContext } from '../../../lib/server/response';
-import { VerifyException } from '../../exceptions/auth/verify.exception';
 import appConfig from '../../config/app.config';
 import { VerificationService } from '../verification/verification.service';
-import { ResendVerificationException } from '../../exceptions/auth/resend-verification.exception';
+import { ResendVerificationException } from './exceptions/resend-verification.exception';
+import { VerifyException } from './exceptions/verify.exception';
 
 @Service()
 @autobind
