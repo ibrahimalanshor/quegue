@@ -13,3 +13,8 @@ export type StoredResetPassword = Stored<ResetPassword>;
 export interface ForgotPasswordValues {
   email: string;
 }
+
+export interface ResetPasswordValues {
+  token: string;
+  password: string;
+}

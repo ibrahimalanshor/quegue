@@ -26,7 +26,9 @@
     },
     "reset-password": {
         "exceptions": {
-            "email-not-found": "Email is not found"
+            "email-not-found": "Email is not found",
+            "token-expired": "Token is expired",
+            "token-invalid": "Token is invalid"
         },
         "mail": {
             "forgot-password": {
