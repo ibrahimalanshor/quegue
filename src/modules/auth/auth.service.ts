@@ -46,7 +46,9 @@ export class AuthService {
     });
 
     if (!(await compare(values.password, user.password))) {
-      throw new Error(getString('auth.credential-invalid') as string);
+      throw new Error(
+        getString('auth.exceptions.credential-invalid') as string
+      );
     }
 
     await refreshTokenResource.service.delete({
@@ -90,7 +92,7 @@ export class AuthService {
     });
 
     if (isBefore(storedRefreshToken.expire_at)) {
-      throw new Error(getString('auth.token-expired') as string);
+      throw new Error(getString('auth.exceptions.token-expired') as string);
     }
 
     return await generateAccessToken({

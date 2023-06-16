@@ -42,7 +42,9 @@ export class VerificationService {
     });
 
     if (user.verified_at) {
-      throw new Error(getString('auth.email-already-verified') as string);
+      throw new Error(
+        getString('verification.exepctions.email-already-verified') as string
+      );
     }
 
     await this.sendVerification(user);
@@ -60,7 +62,9 @@ export class VerificationService {
     });
 
     if (isBefore(storedVerification.expire_at)) {
-      throw new Error(getString('auth.token-expired') as string);
+      throw new Error(
+        getString('verification.exepctions.token-expired') as string
+      );
     }
 
     await Promise.all([

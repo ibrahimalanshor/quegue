@@ -8,17 +8,17 @@ export class VerificationMail extends Mail {
     super();
 
     this.to = data.user.email;
-    this.subject = getString('auth.mail.verification-subject') as string;
-    this.text = getString('auth.mail.verification-content') as string;
-    this.template = 'auth/verification.pug';
+    this.subject = getString('verification.mail.subject') as string;
+    this.text = getString('verification.mail.content') as string;
+    this.template = 'verification/verification.pug';
     this.templateData = {
-      title: getString('auth.mail.verification-title') as string,
-      message: getString('auth.mail.verification-content') as string,
-      greet: getString('auth.mail.verification-greet') as string,
+      title: getString('verification.mail.title') as string,
+      message: getString('verification.mail.content') as string,
+      greet: getString('verification.mail.greet') as string,
       user: data.user,
       link: {
         url: `${serverConfig.baseUrl}/api/auth/verify/${data.token}`,
-        text: getString('auth.mail.verification-link') as string,
+        text: getString('verification.mail.link') as string,
       },
     };
   }

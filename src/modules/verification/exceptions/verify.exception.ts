@@ -6,7 +6,7 @@ export class VerifyException extends BadRequestError {
   constructor(error: any) {
     const message =
       error instanceof NoResultError
-        ? getString('auth.token-invalid')
+        ? getString('verification.exceptions.token-invalid')
         : error.message;
 
     super({}, message as string);

@@ -1,14 +1,18 @@
 import { NoResultError } from '../../../../lib/db/errors/no-result.error';
 import { getString } from '../../../../lib/helpers/resoure.helper';
+import { Exception } from '../../../../lib/server/exception';
 import { UnauthorizedError } from '../../../../lib/server/http-error/unauthorized.error';
 
-export class LoginException extends UnauthorizedError {
+export class LoginException extends Exception {
   constructor(error: any) {
-    const message =
-      error instanceof NoResultError
-        ? getString('auth.credential-not-found')
-        : error.message;
+    super();
 
-    super({}, message as string);
+    if (error instanceof NoResultError) {
+      this.throw(
+        new UnauthorizedError(getString('auth.exceptions.credential-not-found'))
+      );
+    } else {
+      this.throw(error);
+    }
   }
 }

@@ -6,7 +6,7 @@ export class LogoutException extends BadRequestError {
   constructor(error: any) {
     const message =
       error instanceof NoAffectedError
-        ? getString('auth.token-invalid')
+        ? getString('auth.exceptions.token-invalid')
         : error.message;
 
     super({}, message as string);

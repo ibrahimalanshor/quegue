@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Exception } from './exception';
 
 interface ErrorMiddlewareConfig {
   log: boolean;
@@ -19,6 +20,14 @@ export function createErrorMiddleware(config?: ErrorMiddlewareConfig) {
     res: Response,
     next: NextFunction
   ): Response => {
+    if (err instanceof Exception && err.error instanceof BaseError) {
+      return res.status(err.error.status).json({
+        status: err.error.status,
+        message: err.error.message,
+        errors: err.error.errors,
+      });
+    }
+
     if (err instanceof BaseError) {
       return res.status(err.status).json({
         status: err.status,
@@ -28,12 +37,12 @@ export function createErrorMiddleware(config?: ErrorMiddlewareConfig) {
     }
 
     if (config?.log) {
-      console.log(err);
+      console.log(err instanceof Exception ? err.error : err);
     }
 
     return res.status(500).json({
       status: 500,
-      errors: err,
+      errors: err instanceof Exception ? err.error : err,
     });
   };
 }

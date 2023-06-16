@@ -6,7 +6,7 @@ export class ResendVerificationException extends BadRequestError {
   constructor(error: any) {
     const message =
       error instanceof NoResultError
-        ? getString('auth.email-not-found')
+        ? getString('verification.exceptions.email-not-found')
         : error.message;
 
     super({}, message as string);
