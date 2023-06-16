@@ -1,14 +1,18 @@
 import { NoAffectedError } from '../../../../lib/db/errors/no-affected.error';
 import { getString } from '../../../../lib/helpers/resoure.helper';
+import { Exception } from '../../../../lib/server/exception';
 import { BadRequestError } from '../../../../lib/server/http-error/bad-request.error';
 
-export class LogoutException extends BadRequestError {
+export class LogoutException extends Exception {
   constructor(error: any) {
-    const message =
-      error instanceof NoAffectedError
-        ? getString('auth.exceptions.token-invalid')
-        : error.message;
+    super();
 
-    super({}, message as string);
+    if (error instanceof NoAffectedError) {
+      this.throw(
+        new BadRequestError(getString('auth.exceptions.token-invalid'))
+      );
+    } else {
+      this.throw(error);
+    }
   }
 }

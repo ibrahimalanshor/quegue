@@ -17,7 +17,7 @@ export class VerificationMail extends Mail {
       greet: getString('verification.mail.greet') as string,
       user: data.user,
       link: {
-        url: `${serverConfig.baseUrl}/api/auth/verify/${data.token}`,
+        url: `${serverConfig.baseUrl}/api/verification/verify/${data.token}`,
         text: getString('verification.mail.link') as string,
       },
     };

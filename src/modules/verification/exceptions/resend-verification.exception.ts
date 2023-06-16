@@ -1,14 +1,20 @@
 import { NoResultError } from '../../../../lib/db/errors/no-result.error';
 import { getString } from '../../../../lib/helpers/resoure.helper';
+import { Exception } from '../../../../lib/server/exception';
 import { BadRequestError } from '../../../../lib/server/http-error/bad-request.error';
 
-export class ResendVerificationException extends BadRequestError {
+export class ResendVerificationException extends Exception {
   constructor(error: any) {
-    const message =
-      error instanceof NoResultError
-        ? getString('verification.exceptions.email-not-found')
-        : error.message;
+    super();
 
-    super({}, message as string);
+    if (error instanceof NoResultError) {
+      this.throw(
+        new BadRequestError(
+          getString('verification.exceptions.email-not-found')
+        )
+      );
+    } else {
+      this.throw(error);
+    }
   }
 }
