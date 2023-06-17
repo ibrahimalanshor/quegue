@@ -8,7 +8,7 @@ export async function genereateRefreshToken(
   payload: AuthPayload
 ): Promise<AuthToken> {
   const refreshToken = await generateToken(
-    { userId: payload.user_id },
+    { user_id: payload.user_id },
     jwtConfig.refreshTokenSecret,
     { expiresIn: '30m' }
   );
@@ -28,7 +28,7 @@ export async function generateAccessToken(
   payload: AuthPayload
 ): Promise<AuthToken> {
   return await generateToken(
-    { userId: payload.user_id },
+    { user_id: payload.user_id },
     jwtConfig.accessTokenSecret,
     {
       expiresIn: '15m',
