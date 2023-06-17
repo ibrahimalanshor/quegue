@@ -11,6 +11,8 @@ export class LoginException extends Exception {
       this.throw(
         new UnauthorizedError(getString('auth.exceptions.credential-not-found'))
       );
+    } else if (error instanceof LoginException) {
+      this.throw(new UnauthorizedError(error.error.message));
     } else {
       this.throw(error);
     }

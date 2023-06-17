@@ -11,6 +11,8 @@ export class RefreshTokenException extends Exception {
       this.throw(
         new BadRequestError(getString('auth.exceptions.token-invalid'))
       );
+    } else if (error instanceof RefreshTokenException) {
+      this.throw(new BadRequestError(error.error.message));
     } else {
       this.throw(error);
     }

@@ -12,6 +12,7 @@ import { sendMail } from '../../../lib/mail/mail';
 import { ForgotPasswordMail } from './mail/forgot-password.mail';
 import { getString } from '../../../lib/helpers/resoure.helper';
 import { hash } from '../../../lib/bcrypt/bcrypt';
+import { ResetPasswordException } from './exceptions/reset-password.exception';
 
 @Service()
 export class ResetPasswordService {
@@ -55,8 +56,10 @@ export class ResetPasswordService {
     });
 
     if (isBefore(storedResetPassword.expire_at)) {
-      throw new Error(
-        getString('reset-password.exceptions.token-expired') as string
+      throw new ResetPasswordException(
+        new Error(
+          getString('reset-password.exceptions.token-expired') as string
+        )
       );
     }
 

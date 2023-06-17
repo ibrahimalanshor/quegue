@@ -13,6 +13,8 @@ export class ResendVerificationException extends Exception {
           getString('verification.exceptions.email-not-found')
         )
       );
+    } else if (error instanceof ResendVerificationException) {
+      this.throw(new BadRequestError(error.error.message));
     } else {
       this.throw(error);
     }

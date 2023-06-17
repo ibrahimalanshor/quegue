@@ -13,6 +13,8 @@ export class ResetPasswordException extends Exception {
           getString('reset-password.exceptions.token-invalid')
         )
       );
+    } else if (error instanceof ResetPasswordException) {
+      this.throw(new BadRequestError(error.error.message));
     } else {
       this.throw(error);
     }

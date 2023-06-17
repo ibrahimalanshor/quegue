@@ -14,6 +14,8 @@ import { compare, hash } from '../../../lib/bcrypt/bcrypt';
 import { getString } from '../../../lib/helpers/resoure.helper';
 import { isBefore } from '../../../lib/date/date.helper';
 import { RegistrationEvent } from './events/registration.event';
+import { LoginException } from './exceptions/login.exception';
+import { RefreshTokenException } from './exceptions/refresh-token.exception';
 
 @Service()
 export class AuthService {
@@ -46,8 +48,8 @@ export class AuthService {
     });
 
     if (!(await compare(values.password, user.password))) {
-      throw new Error(
-        getString('auth.exceptions.credential-invalid') as string
+      throw new LoginException(
+        new Error(getString('auth.exceptions.credential-invalid') as string)
       );
     }
 
@@ -92,7 +94,9 @@ export class AuthService {
     });
 
     if (isBefore(storedRefreshToken.expire_at)) {
-      throw new Error(getString('auth.exceptions.token-expired') as string);
+      throw new RefreshTokenException(
+        new Error(getString('auth.exceptions.token-expired') as string)
+      );
     }
 
     return await generateAccessToken({

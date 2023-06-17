@@ -11,6 +11,8 @@ export class VerifyException extends Exception {
       this.throw(
         new BadRequestError(getString('verification.exceptions.token-invalid'))
       );
+    } else if (error instanceof VerifyException) {
+      this.throw(new BadRequestError(error.error.message));
     } else {
       this.throw(error);
     }

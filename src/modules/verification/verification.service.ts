@@ -11,6 +11,8 @@ import { verificationResource } from './verification.resource';
 import { sendMail } from '../../../lib/mail/mail';
 import { StoredUser } from '../user/user.entity';
 import { VerificationMail } from './mail/verification.mail';
+import { ResendVerificationException } from './exceptions/resend-verification.exception';
+import { VerifyException } from './exceptions/verify.exception';
 
 @Service()
 export class VerificationService {
@@ -42,8 +44,10 @@ export class VerificationService {
     });
 
     if (user.verified_at) {
-      throw new Error(
-        getString('verification.exepctions.email-already-verified') as string
+      throw new ResendVerificationException(
+        new Error(
+          getString('verification.exepctions.email-already-verified') as string
+        )
       );
     }
 
@@ -62,8 +66,8 @@ export class VerificationService {
     });
 
     if (isBefore(storedVerification.expire_at)) {
-      throw new Error(
-        getString('verification.exepctions.token-expired') as string
+      throw new VerifyException(
+        new Error(getString('verification.exepctions.token-expired') as string)
       );
     }
 
