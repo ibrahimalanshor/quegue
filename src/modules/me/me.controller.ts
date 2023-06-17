@@ -1,12 +1,21 @@
 import { Service } from 'typedi';
 import autobind from 'autobind-decorator';
 import { RouterContext } from '../../../lib/server/response';
-import { AuthToken } from '../auth/auth.entity';
+import { MeService } from './me.service';
 
 @Service()
 @autobind
 export class MeController {
-  me(context: RouterContext): Promise<AuthToken> {
+  constructor(public meService: MeService) {}
+
+  me(context: RouterContext) {
     return context.req.user;
+  }
+
+  async updateMe(context: RouterContext) {
+    await this.meService.updateMe({
+      values: context.req.body,
+      user: context.req.user,
+    });
   }
 }
