@@ -1,5 +1,4 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { jwtConfig } from '../../src/config/jwt.config';
 
 export async function generateToken(
   payload: any,
@@ -7,4 +6,11 @@ export async function generateToken(
   options?: SignOptions
 ) {
   return await jwt.sign(payload, secret, options);
+}
+
+export async function verifyToken<T>(
+  token: string,
+  secret: string
+): Promise<T> {
+  return (await jwt.verify(token, secret)) as T;
 }

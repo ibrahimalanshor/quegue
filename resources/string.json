@@ -8,8 +8,10 @@
             "email-not-found": "Email is not found",
             "token-expired": "Token is expired",
             "token-invalid": "Token is invalid",
+            "access-token-required": "Access Token is required",
             "credential-not-found": "Credential not found",
-            "credential-invalid": "Credential invalid"
+            "credential-invalid": "Credential invalid",
+            "access-token-invalid": "Access Token Invalid"
         }
     },
     "verification": {
