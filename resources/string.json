@@ -1,4 +1,7 @@
 {
+    "validation": {
+        "confirmed": "{field} must be have the same value with {related}"
+    },
     "auth": {
         "exceptions": {
             "email-already-exists": "Email already exists",
