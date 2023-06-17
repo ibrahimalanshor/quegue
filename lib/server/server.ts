@@ -21,6 +21,9 @@ class Server {
   constructor(app: express.Application, config?: Partial<ServerConfig>) {
     this.app = app;
 
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+
     if (config) {
       this.config.port = config.port || 3000;
       this.config.routes = config.routes || [];
