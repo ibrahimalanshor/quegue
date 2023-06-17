@@ -7,3 +7,10 @@ export interface UpdateMeOptions {
   };
   user: StoredUser;
 }
+
+export interface UpdateEmailOptions {
+  values: {
+    email: string;
+  };
+  user: StoredUser;
+}

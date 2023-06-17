@@ -5,6 +5,7 @@ import { MeController } from './me.controller';
 import { createAuthMiddleware } from '../auth/middlewares/auth.middleware';
 import { createBodyValidator } from '../../../lib/server/middlewares/request.middleware';
 import { UpdateMeDto } from './dto/update-me.dto';
+import { UpdateEmailDto } from './dto/update-email.dto';
 
 export const meRoute = createRoute(Container.get(MeController))
   .get('/api/me', (controller) => [
@@ -15,5 +16,10 @@ export const meRoute = createRoute(Container.get(MeController))
     createAuthMiddleware(),
     createBodyValidator(UpdateMeDto),
     createJsonResponse(controller.updateMe),
+  ])
+  .patch('/api/me/email', (controller) => [
+    createAuthMiddleware(),
+    createBodyValidator(UpdateEmailDto),
+    createJsonResponse(controller.updateEmail),
   ])
   .getRouter();

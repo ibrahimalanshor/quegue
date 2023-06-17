@@ -67,23 +67,31 @@ export class ResourceService<T> {
   }
 
   async update(options: UpdateOptions): Promise<Stored<T> | number> {
-    const fillableValues = options.force
-      ? options.values
-      : Object.fromEntries(
-          this.model.fillable.map((col: string) => [col, options.values[col]])
-        );
+    try {
+      const fillableValues = options.force
+        ? options.values
+        : Object.fromEntries(
+            this.model.fillable.map((col: string) => [col, options.values[col]])
+          );
 
-    const res = await knex(this.model.table)
-      .where(createWhereBuilder(options.filter))
-      .update(fillableValues);
+      const res = await knex(this.model.table)
+        .where(createWhereBuilder(options.filter))
+        .update(fillableValues);
 
-    if (!(options.returnCreated ?? true)) {
-      return res;
+      if (!(options.returnCreated ?? true)) {
+        return res;
+      }
+
+      return await this.findOne({
+        filter: options.filter,
+      });
+    } catch (err: any) {
+      if (err.errno === 1062) {
+        throw new ConflictError();
+      }
+
+      throw err;
     }
-
-    return await this.findOne({
-      filter: options.filter,
-    });
   }
 
   async delete(options: Deleteptions) {
