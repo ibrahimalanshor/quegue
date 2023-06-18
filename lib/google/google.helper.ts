@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
-import { request } from '../request/request';
 import { GoogleUserInfoError } from './google.exception';
+import { http } from '../request/http.request';
 
 interface GoogleUserInfo {
   id: string;
@@ -18,7 +18,7 @@ export async function getGoogleUserInfo(
   token: GoogleUserInfoToken
 ): Promise<GoogleUserInfo> {
   try {
-    const res = await request.get(
+    const res = await http.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token.access_token}`,
       {
         headers: {
