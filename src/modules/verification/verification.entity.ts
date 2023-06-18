@@ -1,4 +1,4 @@
-import { Stored } from '../../../lib/entity/type';
+import { Stored } from '../../../lib/entity/entity.type';
 import { User } from '../user/user.entity';
 
 export interface Verification {

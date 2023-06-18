@@ -1,4 +1,4 @@
-import { Stored } from '../../../lib/entity/type';
+import { Stored } from '../../../lib/entity/entity.type';
 
 export interface User {
   name: string;
