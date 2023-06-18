@@ -11,7 +11,6 @@ import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
-import { compare, hash } from '../../../lib/bcrypt/bcrypt';
 import { getString } from '../../../lib/helpers/resoure.helper';
 import { getNow, isBefore } from '../../../lib/date/date.helper';
 import { RegistrationEvent } from './events/registration.event';
@@ -19,6 +18,7 @@ import { LoginException } from './exceptions/login.exception';
 import { RefreshTokenException } from './exceptions/refresh-token.exception';
 import { getGoogleUserInfo } from '../../../lib/google/google.helper';
 import { randomString } from '../../../lib/string/string.helper';
+import { compareHash, createHash } from '../../../lib/string/hash.helper';
 
 @Service()
 export class AuthService {
@@ -28,7 +28,7 @@ export class AuthService {
         email: options.values.email,
         username: options.values.username,
         name: options.values.name,
-        password: await hash(options.values.password),
+        password: await createHash(options.values.password),
         verified_at: options.verified ? getNow() : null,
       },
       force: true,
@@ -54,7 +54,7 @@ export class AuthService {
       throwOnNoResult: true,
     });
 
-    if (!(await compare(values.password, user.password))) {
+    if (!(await compareHash(values.password, user.password))) {
       throw new LoginException(
         new Error(getString('auth.exceptions.credential-invalid') as string)
       );

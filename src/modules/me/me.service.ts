@@ -3,7 +3,7 @@ import { UpdateEmailOptions, UpdateMeOptions } from './me.entity';
 import { userResource } from '../user/user.resource';
 import { VerificationService } from '../verification/verification.service';
 import { StoredUser } from '../user/user.entity';
-import { hash } from '../../../lib/bcrypt/bcrypt';
+import { createHash } from '../../../lib/string/hash.helper';
 
 @Service()
 export class MeService {
@@ -22,7 +22,7 @@ export class MeService {
         name: options.values.name,
         ...(options.values.password
           ? {
-              password: await hash(options.values.password),
+              password: await createHash(options.values.password),
             }
           : {}),
       },
