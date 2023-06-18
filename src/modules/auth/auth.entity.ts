@@ -1,8 +1,11 @@
-export interface RegisterValues {
-  name: string;
-  username: string;
-  email: string;
-  password: string;
+export interface RegisterOptions {
+  values: {
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+  };
+  verified?: boolean;
 }
 
 export interface LoginValues {
@@ -16,6 +19,11 @@ export interface RefreshTokenValues {
 
 export interface LogoutValues {
   token: string;
+}
+
+export interface GoogleAuthValues {
+  id_token: string;
+  access_token: string;
 }
 
 export type AuthToken = string;

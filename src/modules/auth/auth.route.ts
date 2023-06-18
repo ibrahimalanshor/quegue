@@ -7,6 +7,7 @@ import { LoginDto } from './dto/login.dto';
 import { LogoutDto } from './dto/logout.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { GoogleAuthDto } from './dto/google-auth.dto';
 
 export const authRoute = createRoute(Container.get(AuthController))
   .post('/api/auth/login', (controller: AuthController) => [
@@ -24,5 +25,9 @@ export const authRoute = createRoute(Container.get(AuthController))
   .post('/api/auth/refresh-token', (controller: AuthController) => [
     createBodyValidator(RefreshTokenDto),
     createJsonResponse(controller.refreshToken),
+  ])
+  .post('/api/auth/google', (controller: AuthController) => [
+    createBodyValidator(GoogleAuthDto),
+    createJsonResponse(controller.googleAuth),
   ])
   .getRouter();
