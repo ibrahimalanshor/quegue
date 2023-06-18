@@ -3,6 +3,7 @@ import { UpdateEmailOptions, UpdateMeOptions } from './me.entity';
 import { userResource } from '../user/user.resource';
 import { VerificationService } from '../verification/verification.service';
 import { StoredUser } from '../user/user.entity';
+import { hash } from '../../../lib/bcrypt/bcrypt';
 
 @Service()
 export class MeService {
@@ -16,7 +17,15 @@ export class MeService {
           value: options.user.id,
         },
       },
-      values: options.values,
+      values: {
+        username: options.values.username,
+        name: options.values.name,
+        ...(options.values.password
+          ? {
+              password: await hash(options.values.password),
+            }
+          : {}),
+      },
       returnCreated: false,
     });
   }
