@@ -6,6 +6,7 @@ export class VerificationModel extends ResourceModel {
   table: string = 'verifications';
   fillable: string[] = ['token', 'user_id', 'expire_at'];
   selectable: string[] = ['id', 'token', 'user_id', 'created_at', 'updated_at'];
+  hidden: string[] = [];
 }
 
 export const verificationResource = createResource<Verification>(

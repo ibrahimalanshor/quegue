@@ -2,7 +2,6 @@ import { Knex } from 'knex';
 import { knex } from '../knex/knex';
 import {
   ResourceFilters,
-  WithFilter,
   WithModify,
   WithSelect,
   WithValue,
@@ -37,7 +36,9 @@ export function createFillableValues(
 }
 
 export function createSelectedColumns(
-  options: Partial<WithSelect> & { selectable: string[] }
+  options: Partial<WithSelect> & { selectable: string[]; hidden: string[] }
 ): string[] {
-  return options.columns ? options.columns : options.selectable;
+  return options.columns && options.columns.length
+    ? options.columns
+    : options.selectable.filter((column) => !options.hidden.includes(column));
 }

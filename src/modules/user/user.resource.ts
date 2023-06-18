@@ -16,6 +16,7 @@ export class UserModel extends ResourceModel {
     'created_at',
     'updated_at',
   ];
+  hidden: string[] = ['password'];
 }
 
 export const userResource = createResource<User>(new UserModel());
