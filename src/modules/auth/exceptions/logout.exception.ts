@@ -1,5 +1,5 @@
 import { NoAffectedError } from '../../../../lib/db/errors/no-affected.error';
-import { getString } from '../../../../lib/helpers/resoure.helper';
+import { getString } from '../../../../lib/string/string-resource';
 import { Exception } from '../../../../lib/server/exception';
 import { BadRequestError } from '../../../../lib/server/http-error/bad-request.error';
 

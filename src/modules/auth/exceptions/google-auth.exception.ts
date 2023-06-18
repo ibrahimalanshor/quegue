@@ -1,5 +1,5 @@
 import { GoogleUserInfoError } from '../../../../lib/google/google.exception';
-import { getString } from '../../../../lib/helpers/resoure.helper';
+import { getString } from '../../../../lib/string/string-resource';
 import { Exception } from '../../../../lib/server/exception';
 import { BadRequestError } from '../../../../lib/server/http-error/bad-request.error';
 

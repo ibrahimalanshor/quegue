@@ -1,5 +1,5 @@
 import { Mail } from '../../../../lib/mail/mail';
-import { getString } from '../../../../lib/helpers/resoure.helper';
+import { getString } from '../../../../lib/string/string-resource';
 import { serverConfig } from '../../../config/server.config';
 import { StoredUser } from '../../user/user.entity';
 

@@ -10,7 +10,7 @@ import { resetPasswordResource } from './reset-password.resource';
 import { getNext, isBefore } from '../../../lib/date/date.helper';
 import { sendMail } from '../../../lib/mail/mail';
 import { ForgotPasswordMail } from './mail/forgot-password.mail';
-import { getString } from '../../../lib/helpers/resoure.helper';
+import { getString } from '../../../lib/string/string-resource';
 import { ResetPasswordException } from './exceptions/reset-password.exception';
 import { createHash } from '../../../lib/string/hash.helper';
 

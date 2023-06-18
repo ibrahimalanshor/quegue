@@ -11,7 +11,7 @@ import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
-import { getString } from '../../../lib/helpers/resoure.helper';
+import { getString } from '../../../lib/string/string-resource';
 import { getNow, isBefore } from '../../../lib/date/date.helper';
 import { RegistrationEvent } from './events/registration.event';
 import { LoginException } from './exceptions/login.exception';
