@@ -34,8 +34,8 @@ export class ResetPasswordService {
         token: crypto.randomBytes(24).toString('hex'),
         expire_at: getNext(1, 'hour'),
       },
-      returnCreated: true,
-      returnedColumns: ['token'],
+      returning: true,
+      returned: ['token'],
     })) as StoredResetPassword;
 
     await sendMail(
@@ -74,7 +74,7 @@ export class ResetPasswordService {
         values: {
           password: await createHash(values.password),
         },
-        returnCreated: false,
+        returning: false,
       }),
       resetPasswordResource.service.delete({
         filter: {

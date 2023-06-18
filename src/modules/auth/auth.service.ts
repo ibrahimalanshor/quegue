@@ -32,7 +32,7 @@ export class AuthService {
         verified_at: options.verified ? getNow() : null,
       },
       force: true,
-      returnedColumns: ['id', 'email', 'username'],
+      returned: ['id', 'email', 'username'],
     })) as StoredUser;
 
     await RegistrationEvent.emit('registered', user);

@@ -25,7 +25,7 @@ export class VerificationService {
         user_id: user.id,
         expire_at: getNext(1, 'hour'),
       },
-      returnCreated: false,
+      returning: false,
     });
 
     await sendMail(new VerificationMail({ user, token }));
@@ -83,7 +83,7 @@ export class VerificationService {
           },
         },
         force: true,
-        returnCreated: false,
+        returning: false,
       }),
       verificationResource.service.delete({
         filter: {

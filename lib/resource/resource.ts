@@ -45,7 +45,7 @@ export class ResourceService<T> {
 
       const [storedId] = await knex(this.model.table).insert(fillableValues);
 
-      if (!(options.returnCreated ?? true)) {
+      if (!(options.returning ?? true)) {
         return storedId;
       }
 
@@ -55,7 +55,7 @@ export class ResourceService<T> {
             value: storedId,
           },
         },
-        columns: options.returnedColumns,
+        columns: options.returned,
       });
     } catch (err: any) {
       if (err.errno === 1062) {
@@ -78,12 +78,13 @@ export class ResourceService<T> {
         .where(createWhereBuilder(options.filter))
         .update(fillableValues);
 
-      if (!(options.returnCreated ?? true)) {
+      if (!(options.returning ?? true)) {
         return res;
       }
 
       return await this.findOne({
         filter: options.filter,
+        columns: options.returned,
       });
     } catch (err: any) {
       if (err.errno === 1062) {

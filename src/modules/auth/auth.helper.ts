@@ -18,7 +18,7 @@ export async function genereateRefreshToken(
       user_id: payload.user_id,
       expire_at: getNext(30, 'day'),
     },
-    returnCreated: false,
+    returning: false,
   });
 
   return refreshToken;

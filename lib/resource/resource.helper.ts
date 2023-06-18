@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
-import { FilterParams } from './resource.type';
 import { knex } from '../knex/knex';
+import { ResourceFilters } from './resource.type';
 
 export function createWhereBuilder(
-  filters?: FilterParams
+  filters?: ResourceFilters
 ): (builder: Knex.QueryBuilder) => void {
   return (builder: Knex.QueryBuilder) => {
     for (const key in filters) {

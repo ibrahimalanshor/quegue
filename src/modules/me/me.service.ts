@@ -26,7 +26,7 @@ export class MeService {
             }
           : {}),
       },
-      returnCreated: false,
+      returning: false,
     });
   }
 
@@ -42,7 +42,7 @@ export class MeService {
         email: options.values.email,
         verified_at: null,
       },
-      returnCreated: true,
+      returning: true,
       force: true,
     })) as StoredUser;
 
