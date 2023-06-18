@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "dev": "nodemon bin/serve.ts",
-    "build": "rimraf dist && tsc --build && copyfiles .env.* src/tempaltes dist",
+    "build": "rimraf dist && tsc --build && copyfiles .env.* src/templates dist",
     "start": "node dist/bin/serve.js"
   },
   "keywords": [],
