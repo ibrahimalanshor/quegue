@@ -23,10 +23,6 @@ export type WithSelect = {
 export type WithFilter = {
   filter: ResourceFilters;
 };
-export type WithPaginate = {
-  limit: number;
-  offset: number;
-};
 export type WithValue = {
   values: Record<string, any>;
 };
@@ -45,9 +41,14 @@ export class ResourceService<T> {
 
   async findAll(
     options: Partial<WithFilter> &
-      Partial<WithSelect> &
-      Partial<WithPaginate> & {
+      Partial<WithSelect> & {
         paginated?: boolean;
+        limit?: number;
+        offset?: number;
+        sort?: {
+          column: string;
+          direction: 'asc' | 'desc';
+        };
       }
   ): Promise<Stored<T>[] | Paginated<Stored<T>>> {
     const columns = createSelectedColumns({
@@ -56,20 +57,27 @@ export class ResourceService<T> {
       hidden: this.model.hidden,
     });
 
-    const query = knex(this.model.table).where(
-      createWhereBuilder(options.filter)
-    );
+    const query = knex(this.model.table)
+      .where(createWhereBuilder(options.filter))
+      .orderBy(options.sort?.column || 'id', options.sort?.direction);
+
+    if (options.limit || options.paginated) {
+      query.limit(options.limit || 10);
+    }
+
+    if (options.offset || options.paginated) {
+      query.offset(options.offset || 1);
+    }
+
+    const rows = (await query.select(columns)) as Stored<T>[];
 
     if (!options.paginated) {
-      return (await query.select(columns)) as Stored<T>[];
+      return rows;
     }
 
     return {
       count: await this.count({ filter: options.filter }),
-      rows: (await query
-        .limit(options.limit || 10)
-        .offset(options.offset || 0)
-        .select(columns)) as Stored<T>[],
+      rows: rows,
     };
   }
 
