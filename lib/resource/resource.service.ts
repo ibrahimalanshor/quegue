@@ -1,6 +1,10 @@
 import { knex } from '../knex/knex';
 import { Stored } from '../entity/entity.type';
-import { createFillableValues, createWhereBuilder } from './resource.helper';
+import {
+  createFillableValues,
+  createSelectedColumns,
+  createWhereBuilder,
+} from './resource.helper';
 import { NoResultError } from '../db/errors/no-result.error';
 import { ConflictError } from '../db/errors/conflict.error';
 import { NoAffectedError } from '../db/errors/no-affected.error';
@@ -12,6 +16,9 @@ export interface PropertyFilter {
 }
 export type ResourceFilters = {
   [key: string]: PropertyFilter;
+};
+export type WithSelect = {
+  columns: string[];
 };
 export type WithFilter = {
   filter: ResourceFilters;
@@ -25,21 +32,19 @@ export type WithModify = {
   force: boolean;
 };
 
-export type FindOptions = WithFilter & {
-  columns?: string[];
-  throwOnNoResult?: boolean;
-};
-export type Deleteptions = WithFilter & {
-  throwOnNoAffected?: boolean;
-};
-export type StoreOptions = WithValue & Partial<WithModify>;
-export type UpdateOptions = WithFilter & WithValue & Partial<WithModify>;
-
 export class ResourceService<T> {
   constructor(public model: ResourceModel) {}
 
-  async findOne(options: FindOptions): Promise<Stored<T>> {
-    const columns = options.columns ? options.columns : this.model.selectable;
+  async findOne(
+    options: WithFilter &
+      Partial<WithSelect> & {
+        throwOnNoResult?: boolean;
+      }
+  ): Promise<Stored<T>> {
+    const columns = createSelectedColumns({
+      selectable: this.model.selectable,
+      columns: options.columns,
+    });
 
     const res = await knex(this.model.table)
       .where(createWhereBuilder(options.filter))
@@ -52,7 +57,9 @@ export class ResourceService<T> {
     return res as Stored<T>;
   }
 
-  async store(options: StoreOptions): Promise<Stored<T> | number> {
+  async store(
+    options: WithValue & Partial<WithModify>
+  ): Promise<Stored<T> | number> {
     try {
       const fillableValues = createFillableValues({
         values: options.values,
@@ -83,7 +90,9 @@ export class ResourceService<T> {
     }
   }
 
-  async update(options: UpdateOptions): Promise<Stored<T> | number> {
+  async update(
+    options: WithFilter & WithValue & Partial<WithModify>
+  ): Promise<Stored<T> | number> {
     try {
       const fillableValues = createFillableValues({
         values: options.values,
@@ -112,7 +121,11 @@ export class ResourceService<T> {
     }
   }
 
-  async delete(options: Deleteptions) {
+  async delete(
+    options: WithFilter & {
+      throwOnNoAffected?: boolean;
+    }
+  ) {
     const affected = await knex(this.model.table)
       .where(createWhereBuilder(options.filter))
       .del();

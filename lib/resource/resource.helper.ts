@@ -1,6 +1,12 @@
 import { Knex } from 'knex';
 import { knex } from '../knex/knex';
-import { ResourceFilters, WithModify, WithValue } from './resource.service';
+import {
+  ResourceFilters,
+  WithFilter,
+  WithModify,
+  WithSelect,
+  WithValue,
+} from './resource.service';
 
 export function createWhereBuilder(
   filters?: ResourceFilters
@@ -28,4 +34,10 @@ export function createFillableValues(
     : Object.fromEntries(
         options.fillable.map((col: string) => [col, options.values[col]])
       );
+}
+
+export function createSelectedColumns(
+  options: Partial<WithSelect> & { selectable: string[] }
+): string[] {
+  return options.columns ? options.columns : options.selectable;
 }
