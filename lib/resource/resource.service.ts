@@ -53,6 +53,7 @@ export class ResourceService<T> {
     const columns = createSelectedColumns({
       selectable: this.model.selectable,
       columns: options.columns,
+      hidden: this.model.hidden,
     });
 
     const query = knex(this.model.table).where(
@@ -81,6 +82,7 @@ export class ResourceService<T> {
     const columns = createSelectedColumns({
       selectable: this.model.selectable,
       columns: options.columns,
+      hidden: this.model.hidden,
     });
 
     const res = await knex(this.model.table)
