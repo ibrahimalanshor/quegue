@@ -7,3 +7,7 @@ export function isBefore(date: string | Date): boolean {
 export function getNext(value: number, unit: dayjs.ManipulateType): string {
   return dayjs().add(value, unit).format();
 }
+
+export function getNow(): string {
+  return dayjs().format();
+}
