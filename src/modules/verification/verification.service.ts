@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import crypto from 'crypto';
 import { getNext, isBefore } from '../../../lib/date/date.helper';
-import { getString } from '../../../lib/helpers/resoure.helper';
+import { getString } from '../../../lib/string/string-resource';
 import { userResource } from '../user/user.resource';
 import {
   ResendVerifyUserValues,

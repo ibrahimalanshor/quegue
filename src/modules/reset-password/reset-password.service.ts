@@ -10,9 +10,9 @@ import { resetPasswordResource } from './reset-password.resource';
 import { getNext, isBefore } from '../../../lib/date/date.helper';
 import { sendMail } from '../../../lib/mail/mail';
 import { ForgotPasswordMail } from './mail/forgot-password.mail';
-import { getString } from '../../../lib/helpers/resoure.helper';
-import { hash } from '../../../lib/bcrypt/bcrypt';
+import { getString } from '../../../lib/string/string-resource';
 import { ResetPasswordException } from './exceptions/reset-password.exception';
+import { createHash } from '../../../lib/string/hash.helper';
 
 @Service()
 export class ResetPasswordService {
@@ -72,7 +72,7 @@ export class ResetPasswordService {
           },
         },
         values: {
-          password: await hash(values.password),
+          password: await createHash(values.password),
         },
         returnCreated: false,
       }),

@@ -2,29 +2,36 @@ import { StoredUser } from '../user/user.entity';
 import {
   AuthResult,
   AuthToken,
+  GoogleAuthValues,
   LoginValues,
   RefreshTokenValues,
-  RegisterValues,
+  RegisterOptions,
 } from './auth.entity';
 import { userResource } from '../user/user.resource';
 import { refreshTokenResource } from '../refresh-token/refresh-token.resource';
 import { Service } from 'typedi';
 import { generateAccessToken, generateAuthResult } from './auth.helper';
-import { compare, hash } from '../../../lib/bcrypt/bcrypt';
-import { getString } from '../../../lib/helpers/resoure.helper';
-import { isBefore } from '../../../lib/date/date.helper';
+import { getString } from '../../../lib/string/string-resource';
+import { getNow, isBefore } from '../../../lib/date/date.helper';
 import { RegistrationEvent } from './events/registration.event';
 import { LoginException } from './exceptions/login.exception';
 import { RefreshTokenException } from './exceptions/refresh-token.exception';
+import { getGoogleUserInfo } from '../../../lib/google/google.helper';
+import { randomString } from '../../../lib/string/string.helper';
+import { compareHash, createHash } from '../../../lib/string/hash.helper';
 
 @Service()
 export class AuthService {
-  async register(values: RegisterValues): Promise<AuthResult> {
+  async register(options: RegisterOptions): Promise<AuthResult> {
     const user = (await userResource.service.store({
       values: {
-        ...values,
-        password: await hash(values.password),
+        email: options.values.email,
+        username: options.values.username,
+        name: options.values.name,
+        password: await createHash(options.values.password),
+        verified_at: options.verified ? getNow() : null,
       },
+      force: true,
       returnedColumns: ['id', 'email', 'username'],
     })) as StoredUser;
 
@@ -47,7 +54,7 @@ export class AuthService {
       throwOnNoResult: true,
     });
 
-    if (!(await compare(values.password, user.password))) {
+    if (!(await compareHash(values.password, user.password))) {
       throw new LoginException(
         new Error(getString('auth.exceptions.credential-invalid') as string)
       );
@@ -102,5 +109,37 @@ export class AuthService {
     return await generateAccessToken({
       user_id: storedRefreshToken.user_id,
     });
+  }
+
+  async googleAuth(values: GoogleAuthValues): Promise<AuthResult> {
+    const googleUserInfo = await getGoogleUserInfo({
+      id_token: values.id_token,
+      access_token: values.access_token,
+    });
+
+    const storedUser = await userResource.service.findOne({
+      filter: {
+        email: {
+          operator: '=',
+          value: googleUserInfo.email,
+        },
+      },
+      columns: ['id'],
+      throwOnNoResult: false,
+    });
+
+    if (!storedUser) {
+      return await this.register({
+        values: {
+          email: googleUserInfo.email,
+          name: googleUserInfo.name,
+          username: googleUserInfo.name,
+          password: randomString(10),
+        },
+        verified: true,
+      });
+    }
+
+    return await generateAuthResult({ user_id: storedUser.id });
   }
 }

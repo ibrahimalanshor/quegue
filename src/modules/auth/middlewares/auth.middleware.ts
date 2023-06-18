@@ -1,7 +1,7 @@
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { NoResultError } from '../../../../lib/db/errors/no-result.error';
-import { getString } from '../../../../lib/helpers/resoure.helper';
+import { getString } from '../../../../lib/string/string-resource';
 import { verifyToken } from '../../../../lib/jwt/token';
 import { UnauthorizedError } from '../../../../lib/server/http-error/unauthorized.error';
 import { jwtConfig } from '../../../config/jwt.config';

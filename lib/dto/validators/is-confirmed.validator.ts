@@ -3,7 +3,7 @@ import {
   ValidationArguments,
   ValidationOptions,
 } from 'class-validator';
-import { getString } from '../../helpers/resoure.helper';
+import { getString } from '../../string/string-resource';
 
 export function IsConfirmed(
   property: string,

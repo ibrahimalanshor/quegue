@@ -1,5 +1,5 @@
 import { NoResultError } from '../../../../lib/db/errors/no-result.error';
-import { getString } from '../../../../lib/helpers/resoure.helper';
+import { getString } from '../../../../lib/string/string-resource';
 import { Exception } from '../../../../lib/server/exception';
 import { UnauthorizedError } from '../../../../lib/server/http-error/unauthorized.error';
 

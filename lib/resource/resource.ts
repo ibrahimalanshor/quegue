@@ -1,5 +1,5 @@
 import { knex } from '../knex/knex';
-import { Stored } from '../entity/types';
+import { Stored } from '../entity/entity.type';
 import {
   Deleteptions,
   FindOptions,

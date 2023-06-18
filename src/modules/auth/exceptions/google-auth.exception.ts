@@ -1,17 +1,17 @@
-import { NoResultError } from '../../../../lib/db/errors/no-result.error';
+import { GoogleUserInfoError } from '../../../../lib/google/google.exception';
 import { getString } from '../../../../lib/string/string-resource';
 import { Exception } from '../../../../lib/server/exception';
 import { BadRequestError } from '../../../../lib/server/http-error/bad-request.error';
 
-export class VerifyException extends Exception {
+export class GoogleAuthException extends Exception {
   constructor(error: any) {
     super();
 
-    if (error instanceof NoResultError) {
+    if (error instanceof GoogleUserInfoError) {
       this.throw(
-        new BadRequestError(getString('verification.exceptions.token-invalid'))
+        new BadRequestError(getString('auth.exceptions.google-auth-error'))
       );
-    } else if (error instanceof VerifyException) {
+    } else if (error instanceof GoogleAuthException) {
       this.throw(new BadRequestError(error.error.message));
     } else {
       this.throw(error);

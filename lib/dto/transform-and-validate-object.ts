@@ -1,6 +1,6 @@
 import { ClassConstructor, plainToClass } from 'class-transformer';
 import { validateOrReject, ValidationError } from 'class-validator';
-import { ValidationSchemaError } from '../errors/validation-schema-error';
+import { ValidationSchemaError } from './errors/validation-schema-error';
 
 type ObjectTransfromer<T> = (obj: Record<string, any>) => Promise<T>;
 

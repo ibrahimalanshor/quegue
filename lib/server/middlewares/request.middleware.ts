@@ -1,10 +1,10 @@
 import { ClassConstructor } from 'class-transformer';
 import { RequestHandler, Request, Response, NextFunction } from 'express';
 import { createObjectTransformerWithValidator } from '../../dto/transform-and-validate-object';
-import { ValidationSchemaError } from '../../errors/validation-schema-error';
 import { BadRequestError } from '../http-error/bad-request.error';
 import { NotFoundError } from '../http-error/not-found.error';
 import { UnprocessableEntityError } from '../http-error/unprocessable-entity.error';
+import { ValidationSchemaError } from '../../dto/errors/validation-schema-error';
 
 type PreValidator = (req: Record<string, any>) => Record<string, any>;
 type ValidatiorOption = {
