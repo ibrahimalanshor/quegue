@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
 import { knex } from '../knex/knex';
-import { ResourceFilters } from './resource.type';
+import { ResourceFilters, WithModify, WithValue } from './resource.service';
 
 export function createWhereBuilder(
   filters?: ResourceFilters
@@ -18,4 +18,14 @@ export function createWhereBuilder(
       }
     }
   };
+}
+
+export function createFillableValues(
+  options: Partial<WithModify> & WithValue & { fillable: string[] }
+): Record<string, any> {
+  return options.force
+    ? options.values
+    : Object.fromEntries(
+        options.fillable.map((col: string) => [col, options.values[col]])
+      );
 }

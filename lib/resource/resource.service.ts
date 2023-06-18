@@ -1,16 +1,39 @@
 import { knex } from '../knex/knex';
 import { Stored } from '../entity/entity.type';
-import {
-  Deleteptions,
-  FindOptions,
-  StoreOptions,
-  UpdateOptions,
-} from './resource.type';
-import { createWhereBuilder } from './resource.helper';
+import { createFillableValues, createWhereBuilder } from './resource.helper';
 import { NoResultError } from '../db/errors/no-result.error';
 import { ConflictError } from '../db/errors/conflict.error';
 import { NoAffectedError } from '../db/errors/no-affected.error';
 import { ResourceModel } from './resource.model';
+
+export interface PropertyFilter {
+  operator?: string;
+  value: any;
+}
+export type ResourceFilters = {
+  [key: string]: PropertyFilter;
+};
+export type WithFilter = {
+  filter: ResourceFilters;
+};
+export type WithValue = {
+  values: Record<string, any>;
+};
+export type WithModify = {
+  returning: boolean;
+  returned: string[];
+  force: boolean;
+};
+
+export type FindOptions = WithFilter & {
+  columns?: string[];
+  throwOnNoResult?: boolean;
+};
+export type Deleteptions = WithFilter & {
+  throwOnNoAffected?: boolean;
+};
+export type StoreOptions = WithValue & Partial<WithModify>;
+export type UpdateOptions = WithFilter & WithValue & Partial<WithModify>;
 
 export class ResourceService<T> {
   constructor(public model: ResourceModel) {}
@@ -31,11 +54,11 @@ export class ResourceService<T> {
 
   async store(options: StoreOptions): Promise<Stored<T> | number> {
     try {
-      const fillableValues = options.force
-        ? options.values
-        : Object.fromEntries(
-            this.model.fillable.map((col: string) => [col, options.values[col]])
-          );
+      const fillableValues = createFillableValues({
+        values: options.values,
+        force: options.force,
+        fillable: this.model.fillable,
+      });
 
       const [storedId] = await knex(this.model.table).insert(fillableValues);
 
@@ -62,11 +85,11 @@ export class ResourceService<T> {
 
   async update(options: UpdateOptions): Promise<Stored<T> | number> {
     try {
-      const fillableValues = options.force
-        ? options.values
-        : Object.fromEntries(
-            this.model.fillable.map((col: string) => [col, options.values[col]])
-          );
+      const fillableValues = createFillableValues({
+        values: options.values,
+        force: options.force,
+        fillable: this.model.fillable,
+      });
 
       const res = await knex(this.model.table)
         .where(createWhereBuilder(options.filter))
