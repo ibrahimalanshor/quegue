@@ -1,4 +1,5 @@
-import { ResourceModel, createResource } from '../../../lib/resource/resource';
+import { createResource } from '../../../lib/resource/resource';
+import { ResourceModel } from '../../../lib/resource/resource.model';
 import { User } from './user.entity';
 
 export class UserModel extends ResourceModel {
