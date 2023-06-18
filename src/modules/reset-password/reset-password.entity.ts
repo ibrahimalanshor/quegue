@@ -1,4 +1,4 @@
-import { Stored } from '../../../lib/entity/types';
+import { Stored } from '../../../lib/entity/type';
 import { User } from '../user/user.entity';
 
 export interface ResetPassword {
