@@ -4,6 +4,7 @@ export interface UpdateMeOptions {
   values: {
     name: string;
     username: string;
+    password?: string;
   };
   user: StoredUser;
 }
