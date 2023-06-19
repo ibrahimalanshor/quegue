@@ -101,7 +101,7 @@ export async function createQueryValues(
   } catch (err) {
     if (Array.isArray(err)) {
       throw new BadRequestError(
-        new ValidationSchemaError(err as ValidationError[])
+        new ValidationSchemaError(err as ValidationError[]).errors
       );
     }
 
