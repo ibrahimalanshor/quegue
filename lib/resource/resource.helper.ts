@@ -12,7 +12,11 @@ import { plainToClass } from 'class-transformer';
 import { ValidationError, validateOrReject } from 'class-validator';
 import { ValidationSchemaError } from '../dto/errors/validation-schema-error';
 import { BadRequestError } from '../server/http-error/bad-request.error';
-import { SortValues } from './contracts/query.contract';
+import {
+  ColumnsValues,
+  SortValues,
+  ValidRawColumns,
+} from './contracts/query.contract';
 
 export function createWhereBuilder(
   filters?: ResourceFilters
@@ -98,6 +102,15 @@ export function createSortValues(rawColumn: string): SortValues {
     column,
     direction: isDesc ? 'desc' : 'asc',
   };
+}
+
+export function createColumnValues(rawColumns: ValidRawColumns): ColumnsValues {
+  return Object.fromEntries(
+    Object.entries(rawColumns).map(([column, value]) => [
+      column,
+      value.split(','),
+    ])
+  );
 }
 
 export async function createQueryValues(

@@ -9,7 +9,7 @@ export function createResourceRouter<T>(
   model: ResourceModel,
   service: ResourceService<T>
 ): express.Router {
-  return createRoute(createResourceController(service))
+  return createRoute(createResourceController(model, service))
     .get(`/api/${model.table}`, (controller) =>
       createJsonResponse(controller.getAll)
     )

@@ -1,6 +1,7 @@
 import autobind from 'autobind-decorator';
 import { RouterContext } from '../../server/response';
 import {
+  createColumnValues,
   createPaginatedValues,
   createQueryValues,
   createResourcesMeta,
@@ -12,6 +13,8 @@ import {
   ResourceService,
   ResourcesPaginated,
 } from '../resource.service';
+import { ValidRawColumns } from '../contracts/query.contract';
+import { ResourceModel } from '../resource.model';
 
 export interface ResourceMeta {
   total: number;
@@ -26,18 +29,25 @@ export interface ResourcesControllerResult<T> {
 
 @autobind
 export class ResourceControler<T> {
-  constructor(public service: ResourceService<T>) {}
+  constructor(
+    public model: ResourceModel,
+    public service: ResourceService<T>
+  ) {}
 
   async getAll(context: RouterContext): Promise<ResourcesControllerResult<T>> {
     const query = await createQueryValues(context.req.query);
     const page = createPaginatedValues(query.page);
     const sort = createSortValues(query?.sort ?? 'id');
+    const columns = createColumnValues(
+      (query?.columns ?? {}) as ValidRawColumns
+    );
 
     const res = (await this.service.findAll({
       paginated: true,
       limit: page.limit,
       offset: page.offset,
       sort,
+      columns: columns[this.model.table],
     })) as ResourcesPaginated<T>;
 
     return {
@@ -93,6 +103,9 @@ export class ResourceControler<T> {
   }
 }
 
-export function createResourceController<T>(service: ResourceService<T>) {
-  return new ResourceControler(service);
+export function createResourceController<T>(
+  model: ResourceModel,
+  service: ResourceService<T>
+) {
+  return new ResourceControler(model, service);
 }
