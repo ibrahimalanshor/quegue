@@ -16,6 +16,8 @@ import {
 } from '../resource.service';
 import { ValidRawColumns } from '../contracts/resource-query.contract';
 import { ResourceModel } from '../resource.model';
+import { NoResultError } from '../../db/errors/no-result.error';
+import { NotFoundError } from '../../server/http-error/not-found.error';
 
 export interface ResourceMeta {
   total: number;
@@ -71,14 +73,23 @@ export class ResourceControler<T> {
   }
 
   async getOneById(context: RouterContext): Promise<ResourceRow<T>> {
-    return (await this.service.findOne({
-      filter: {
-        id: {
-          operator: '=',
-          value: context.req.params.id,
+    try {
+      return (await this.service.findOne({
+        filter: {
+          id: {
+            operator: '=',
+            value: context.req.params.id,
+          },
         },
-      },
-    })) as ResourceRow<T>;
+        throwOnNoResult: true,
+      })) as ResourceRow<T>;
+    } catch (err) {
+      if (err instanceof NoResultError) {
+        throw new NotFoundError();
+      }
+
+      throw err;
+    }
   }
 
   async updateOneById(context: RouterContext): Promise<ResourceRow<T>> {
