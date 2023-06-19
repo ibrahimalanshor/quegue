@@ -1,5 +1,6 @@
 import { createResource } from '../../../lib/resource/resource';
 import { ResourceModel } from '../../../lib/resource/resource.model';
+import { createAuthMiddleware } from '../auth/middlewares/auth.middleware';
 import { User } from './user.entity';
 
 export class UserModel extends ResourceModel {
@@ -19,4 +20,8 @@ export class UserModel extends ResourceModel {
   hidden: string[] = ['password'];
 }
 
-export const userResource = createResource<User>(new UserModel());
+export const userResource = createResource<User>(new UserModel(), {
+  routerConfig: {
+    middleware: [createAuthMiddleware()],
+  },
+});

@@ -14,7 +14,7 @@ import {
   ResourceService,
   ResourcesPaginated,
 } from '../resource.service';
-import { ValidRawColumns } from '../contracts/query.contract';
+import { ValidRawColumns } from '../contracts/resource-query.contract';
 import { ResourceModel } from '../resource.model';
 
 export interface ResourceMeta {
@@ -43,8 +43,6 @@ export class ResourceControler<T> {
       (query.columns ?? {}) as ValidRawColumns
     );
     const filter = createFilterValues(query.filter ?? {});
-
-    console.log(filter);
 
     const res = (await this.service.findAll({
       paginated: true,

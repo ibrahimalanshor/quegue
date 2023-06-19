@@ -9,7 +9,7 @@ import { NoResultError } from '../db/errors/no-result.error';
 import { ConflictError } from '../db/errors/conflict.error';
 import { NoAffectedError } from '../db/errors/no-affected.error';
 import { ResourceModel } from './resource.model';
-import { FilterValues, SortValues } from './contracts/query.contract';
+import { FilterValues, SortValues } from './contracts/resource-query.contract';
 
 export type ResourceRow<T> = Stored<T>;
 export type ResourceRows<T> = ResourceRow<T>[];

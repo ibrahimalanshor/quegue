@@ -12,7 +12,7 @@ import {
   FilterValues,
   SortValues,
   ValidRawColumns,
-} from './contracts/query.contract';
+} from './contracts/resource-query.contract';
 
 export function createWhereBuilder(
   filters?: FilterValues
