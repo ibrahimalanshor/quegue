@@ -53,9 +53,12 @@ export function createPaginatedValues(page: { size: number; number: number }): {
   limit: number;
   offset: number;
 } {
+  const size = page?.size ?? 10;
+  const number = page?.number ?? 1;
+
   return {
-    limit: page.size,
-    offset: (page.number - 1) * page.size,
+    limit: size,
+    offset: (number - 1) * size,
   };
 }
 
@@ -90,7 +93,10 @@ export async function createQueryValues(
   plainQuery: Record<string, any>
 ): Promise<ResourceQuery> {
   try {
-    plainQuery.page = createPageFromQuery(plainQuery.page);
+    if (typeof plainQuery.page === 'object') {
+      plainQuery.page = createPageFromQuery(plainQuery.page);
+    }
+
     const query = plainToClass(ResourceQuery, plainQuery, {
       excludeExtraneousValues: true,
     });
