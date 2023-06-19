@@ -4,6 +4,7 @@ import {
   createPaginatedValues,
   createQueryValues,
   createResourcesMeta,
+  createSortValues,
 } from '../resource.helper';
 import {
   ResourceRow,
@@ -30,11 +31,13 @@ export class ResourceControler<T> {
   async getAll(context: RouterContext): Promise<ResourcesControllerResult<T>> {
     const query = await createQueryValues(context.req.query);
     const page = createPaginatedValues(query.page);
+    const sort = createSortValues(query?.sort ?? 'id');
 
     const res = (await this.service.findAll({
       paginated: true,
       limit: page.limit,
       offset: page.offset,
+      sort,
     })) as ResourcesPaginated<T>;
 
     return {

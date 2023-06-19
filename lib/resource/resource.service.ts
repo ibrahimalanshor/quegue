@@ -9,6 +9,7 @@ import { NoResultError } from '../db/errors/no-result.error';
 import { ConflictError } from '../db/errors/conflict.error';
 import { NoAffectedError } from '../db/errors/no-affected.error';
 import { ResourceModel } from './resource.model';
+import { SortValues } from './contracts/query.contract';
 
 export interface PropertyFilter {
   operator?: string;
@@ -37,20 +38,20 @@ export type WithModify = {
   returned: string[];
   force: boolean;
 };
+export type WithSort = {
+  sort: SortValues;
+};
 
 export class ResourceService<T> {
   constructor(public model: ResourceModel) {}
 
   async findAll(
     options: Partial<WithFilter> &
-      Partial<WithSelect> & {
+      Partial<WithSelect> &
+      Partial<WithSort> & {
         paginated?: boolean;
         limit?: number;
         offset?: number;
-        sort?: {
-          column: string;
-          direction: 'asc' | 'desc';
-        };
       }
   ): Promise<ResourceRows<T> | ResourcesPaginated<T>> {
     const columns = createSelectedColumns({
@@ -64,11 +65,11 @@ export class ResourceService<T> {
       .orderBy(options.sort?.column || 'id', options.sort?.direction);
 
     if (options.limit || options.paginated) {
-      query.limit(options.limit || 10);
+      query.limit(options.limit ?? 10);
     }
 
     if (options.offset || options.paginated) {
-      query.offset(options.offset || 1);
+      query.offset(options.offset ?? 1);
     }
 
     const rows = (await query.select(columns)) as ResourceRows<T>;

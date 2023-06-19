@@ -12,6 +12,7 @@ import { plainToClass } from 'class-transformer';
 import { ValidationError, validateOrReject } from 'class-validator';
 import { ValidationSchemaError } from '../dto/errors/validation-schema-error';
 import { BadRequestError } from '../server/http-error/bad-request.error';
+import { SortValues } from './contracts/query.contract';
 
 export function createWhereBuilder(
   filters?: ResourceFilters
@@ -87,6 +88,16 @@ export function createPageFromQuery(page: Record<string, any>): {
     },
     { excludeExtraneousValues: true }
   );
+}
+
+export function createSortValues(rawColumn: string): SortValues {
+  const isDesc = rawColumn.charAt(0) === '-';
+  const column = isDesc ? rawColumn.slice(1) : rawColumn;
+
+  return {
+    column,
+    direction: isDesc ? 'desc' : 'asc',
+  };
 }
 
 export async function createQueryValues(
