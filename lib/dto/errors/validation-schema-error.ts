@@ -12,7 +12,13 @@ export class ValidationSchemaError {
       errors.map((value: ValidationError) => {
         return [
           value.property,
-          value.constraints ? Object.values(value.constraints)[0] : '',
+          value.children?.length
+            ? value.children[0].constraints
+              ? Object.values(value.children[0].constraints)[0]
+              : ''
+            : value.constraints
+            ? Object.values(value.constraints)[0]
+            : '',
         ];
       })
     );

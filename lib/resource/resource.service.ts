@@ -17,6 +17,12 @@ export interface PropertyFilter {
 export type ResourceFilters = {
   [key: string]: PropertyFilter;
 };
+export type ResourceRow<T> = Stored<T>;
+export type ResourceRows<T> = ResourceRow<T>[];
+export type ResourcesPaginated<T> = {
+  count: number;
+  rows: ResourceRows<T>;
+};
 export type WithSelect = {
   columns: string[];
 };
@@ -30,10 +36,6 @@ export type WithModify = {
   returning: boolean;
   returned: string[];
   force: boolean;
-};
-export type Paginated<T> = {
-  count: number;
-  rows: T[];
 };
 
 export class ResourceService<T> {
@@ -50,7 +52,7 @@ export class ResourceService<T> {
           direction: 'asc' | 'desc';
         };
       }
-  ): Promise<Stored<T>[] | Paginated<Stored<T>>> {
+  ): Promise<ResourceRows<T> | ResourcesPaginated<T>> {
     const columns = createSelectedColumns({
       selectable: this.model.selectable,
       columns: options.columns,
@@ -69,7 +71,7 @@ export class ResourceService<T> {
       query.offset(options.offset || 1);
     }
 
-    const rows = (await query.select(columns)) as Stored<T>[];
+    const rows = (await query.select(columns)) as ResourceRows<T>;
 
     if (!options.paginated) {
       return rows;
@@ -86,7 +88,7 @@ export class ResourceService<T> {
       Partial<WithSelect> & {
         throwOnNoResult?: boolean;
       }
-  ): Promise<Stored<T>> {
+  ): Promise<ResourceRow<T>> {
     const columns = createSelectedColumns({
       selectable: this.model.selectable,
       columns: options.columns,
@@ -101,12 +103,12 @@ export class ResourceService<T> {
       throw new NoResultError();
     }
 
-    return res as Stored<T>;
+    return res as ResourceRow<T>;
   }
 
   async store(
     options: WithValue & Partial<WithModify>
-  ): Promise<Stored<T> | number> {
+  ): Promise<ResourceRow<T> | number> {
     try {
       const fillableValues = createFillableValues({
         values: options.values,
@@ -139,7 +141,7 @@ export class ResourceService<T> {
 
   async update(
     options: WithFilter & WithValue & Partial<WithModify>
-  ): Promise<Stored<T> | number> {
+  ): Promise<ResourceRow<T> | number> {
     try {
       const fillableValues = createFillableValues({
         values: options.values,
