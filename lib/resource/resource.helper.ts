@@ -1,11 +1,6 @@
 import { Knex } from 'knex';
 import { knex } from '../knex/knex';
-import {
-  ResourceFilters,
-  WithModify,
-  WithSelect,
-  WithValue,
-} from './resource.service';
+import { WithModify, WithSelect, WithValue } from './resource.service';
 import { ResourceMeta } from './router/resource-router.controller';
 import { ResourcePage, ResourceQuery } from './router/resource-router.dto';
 import { plainToClass } from 'class-transformer';
@@ -14,17 +9,20 @@ import { ValidationSchemaError } from '../dto/errors/validation-schema-error';
 import { BadRequestError } from '../server/http-error/bad-request.error';
 import {
   ColumnsValues,
+  FilterValues,
   SortValues,
   ValidRawColumns,
 } from './contracts/query.contract';
 
 export function createWhereBuilder(
-  filters?: ResourceFilters
+  filters?: FilterValues
 ): (builder: Knex.QueryBuilder) => void {
   return (builder: Knex.QueryBuilder) => {
     for (const key in filters) {
       if (filters[key].operator === 'null') {
         builder.whereNull(key);
+      } else if (filters[key].operator === 'like') {
+        builder.whereILike(key, `%${filters[key].value}%`);
       } else {
         builder.where(
           knex.raw(key),
@@ -110,6 +108,24 @@ export function createColumnValues(rawColumns: ValidRawColumns): ColumnsValues {
       column,
       value.split(','),
     ])
+  );
+}
+
+export function createFilterValues(
+  rawFilters: Record<string, any>
+): FilterValues {
+  return Object.fromEntries(
+    Object.entries(rawFilters).map(([rawColumn, value]) => {
+      const [column, operator] = rawColumn.split('|');
+
+      return [
+        column,
+        {
+          operator: operator ?? '=',
+          value: value,
+        },
+      ];
+    })
   );
 }
 

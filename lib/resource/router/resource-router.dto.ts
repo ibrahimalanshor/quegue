@@ -37,6 +37,12 @@ export class ResourceQuery {
 
   @Expose()
   @IsOptional()
+  @IsObject()
+  @IsNotEmpty()
+  filter: object;
+
+  @Expose()
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   sort: string;

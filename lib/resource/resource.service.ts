@@ -9,15 +9,8 @@ import { NoResultError } from '../db/errors/no-result.error';
 import { ConflictError } from '../db/errors/conflict.error';
 import { NoAffectedError } from '../db/errors/no-affected.error';
 import { ResourceModel } from './resource.model';
-import { SortValues } from './contracts/query.contract';
+import { FilterValues, SortValues } from './contracts/query.contract';
 
-export interface PropertyFilter {
-  operator?: string;
-  value: any;
-}
-export type ResourceFilters = {
-  [key: string]: PropertyFilter;
-};
 export type ResourceRow<T> = Stored<T>;
 export type ResourceRows<T> = ResourceRow<T>[];
 export type ResourcesPaginated<T> = {
@@ -28,7 +21,7 @@ export type WithSelect = {
   columns: string[];
 };
 export type WithFilter = {
-  filter: ResourceFilters;
+  filter: FilterValues;
 };
 export type WithValue = {
   values: Record<string, any>;
@@ -126,6 +119,7 @@ export class ResourceService<T> {
       return await this.findOne({
         filter: {
           id: {
+            operator: '=',
             value: storedId,
           },
         },

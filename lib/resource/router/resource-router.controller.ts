@@ -2,6 +2,7 @@ import autobind from 'autobind-decorator';
 import { RouterContext } from '../../server/response';
 import {
   createColumnValues,
+  createFilterValues,
   createPaginatedValues,
   createQueryValues,
   createResourcesMeta,
@@ -37,10 +38,13 @@ export class ResourceControler<T> {
   async getAll(context: RouterContext): Promise<ResourcesControllerResult<T>> {
     const query = await createQueryValues(context.req.query);
     const page = createPaginatedValues(query.page);
-    const sort = createSortValues(query?.sort ?? 'id');
+    const sort = createSortValues(query.sort ?? 'id');
     const columns = createColumnValues(
-      (query?.columns ?? {}) as ValidRawColumns
+      (query.columns ?? {}) as ValidRawColumns
     );
+    const filter = createFilterValues(query.filter ?? {});
+
+    console.log(filter);
 
     const res = (await this.service.findAll({
       paginated: true,
@@ -48,6 +52,7 @@ export class ResourceControler<T> {
       offset: page.offset,
       sort,
       columns: columns[this.model.table],
+      filter,
     })) as ResourcesPaginated<T>;
 
     return {
