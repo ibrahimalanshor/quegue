@@ -1,0 +1,54 @@
+{
+    "validation": {
+        "confirmed": "{field} must be have the same value with {related}"
+    },
+    "auth": {
+        "exceptions": {
+            "email-already-exists": "Email already exists",
+            "email-not-found": "Email is not found",
+            "token-expired": "Token is expired",
+            "token-invalid": "Token is invalid",
+            "access-token-required": "Access Token is required",
+            "credential-not-found": "Credential not found",
+            "credential-invalid": "Credential invalid",
+            "access-token-invalid": "Access Token Invalid",
+            "google-auth-error": "Google Authentication Error"
+        }
+    },
+    "me": {
+        "exceptions": {
+            "email-already-exists": "Email already exists"
+        }
+    },
+    "verification": {
+        "exceptions": {
+            "email-not-found": "Email is not found",
+            "email-already-verified": "Email is already verified",
+            "token-invalid": "Token is invalid",
+            "token-expired": "Token is expired"
+        },
+        "mail": {
+            "subject": "Verify Your Account",
+            "content": "Thank you for creating an account with us. To ensure the security of your account, we kindly request you to verify your email address.",
+            "title": "Email Account Verification",
+            "greet": "Hello",
+            "link": "Verify"
+        }
+    },
+    "reset-password": {
+        "exceptions": {
+            "email-not-found": "Email is not found",
+            "token-expired": "Token is expired",
+            "token-invalid": "Token is invalid"
+        },
+        "mail": {
+            "forgot-password": {
+                "subject": "Password Reset - Action Required",
+                "content": "We have received a notification that you have forgotten your account password. Don't worry, we're here to help you regain access to your account.                ",
+                "title": "Reset Your Password Now!",
+                "greet": "Hello",
+                "link": "Reset Password"
+            }
+        }
+    }
+}
